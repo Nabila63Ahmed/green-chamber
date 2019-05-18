@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import api from './api';
 
-const mongodbConnectionString = 'mongodb://127.0.0.1/my_database';
+const mongodbConnectionString = 'mongodb://127.0.0.1/green-chamber';
 mongoose.connect(mongodbConnectionString, { useNewUrlParser: true });
 
 const app = express();
