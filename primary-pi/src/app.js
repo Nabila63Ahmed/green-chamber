@@ -14,4 +14,4 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/api/', api());
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+app.listen(port, () => console.log(`Server listening on port ${port}...`));
