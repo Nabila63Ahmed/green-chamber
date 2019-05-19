@@ -14,4 +14,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/api/', api());
 
-app.listen(port, () => console.log(`Server listening on port ${port}...`));
+app.listen(port, () => {
+  // eslint-disable-next-line no-console
+  console.log(`Server listening on port ${port}...`);
+});
