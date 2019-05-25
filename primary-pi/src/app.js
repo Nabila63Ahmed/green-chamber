@@ -6,15 +6,31 @@ import api from './api';
 
 (async () => {
   const connectionUri = 'amqp://localhost';
+  const exchangeName = 'exchange-1';
   const queueName = 'queue-1';
+  const routingKey = '*';
 
-  const connection = await amqp.createConnection(connectionUri);
-  const channel = await amqp.createChannel(connection);
-  const queue = await amqp.assertQueue(channel)(queueName);
+  const connection = await amqp.createConnection({ connectionUri });
+  const channel = await amqp.createChannel({ connection });
 
-  await amqp.sendToQueue(channel)(queueName)('Hello world');
+  await amqp.assertExchange({ channel, exchangeName });
+  await amqp.assertQueue({ channel, queueName });
 
-  const message = await amqp.receiveFromQueue(channel)(queueName);
+  await amqp.bindQueueToExchange({
+    channel,
+    exchangeName,
+    queueName,
+    routingKey,
+  });
+
+  await amqp.publish({
+    channel,
+    exchangeName,
+    routingKey,
+    messageString: 'Hello World',
+  });
+
+  const message = await amqp.consume({ channel, queueName });
 
   if (message) {
     console.log('MESSAGE >', message.content.toString());
