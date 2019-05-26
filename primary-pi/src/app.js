@@ -27,13 +27,13 @@ import api from './api';
     channel,
     exchangeName,
     routingKey,
-    messageString: 'Hello World',
+    messageJSON: { message: 'Hello World' },
   });
 
   const message = await amqp.consume({ channel, queueName });
 
   if (message) {
-    console.log('MESSAGE >', message.content.toString());
+    console.log('MESSAGE >', JSON.parse(message.content.toString()));
   }
 })();
 

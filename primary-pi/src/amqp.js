@@ -4,13 +4,12 @@ export const consume = ({ channel, queueName }) => {
   return consumePromisified(channel)(queueName);
 };
 
-export const publish = ({
-  channel,
-  exchangeName,
-  routingKey,
-  messageString,
-}) => {
-  return channel.publish(exchangeName, routingKey, Buffer.from(messageString));
+export const publish = ({ channel, exchangeName, routingKey, messageJSON }) => {
+  return channel.publish(
+    exchangeName,
+    routingKey,
+    Buffer.from(JSON.stringify(messageJSON)),
+  );
 };
 
 export const bindQueueToExchange = ({
