@@ -1,11 +1,7 @@
 import amqp from 'amqplib';
 
-export const consume = ({ channel, queueName }) => {
-  return consumePromisified({
-    channel,
-    queueName,
-    options: { noAck: true },
-  });
+export const consume = ({ channel, queueName, onMessageReceived }) => {
+  return channel.consume(queueName, onMessageReceived);
 };
 
 export const publish = ({ channel, exchangeName, routingKey, messageJSON }) => {
@@ -39,16 +35,4 @@ export const createChannel = ({ connection }) => {
 
 export const createConnection = ({ connectionUri }) => {
   return amqp.connect(connectionUri);
-};
-
-const consumePromisified = ({ channel, queueName, options }) => {
-  return new Promise(resolve => {
-    channel.consume(
-      queueName,
-      message => {
-        resolve(message);
-      },
-      options,
-    );
-  });
 };

@@ -27,28 +27,45 @@ import api from './api';
     channel,
     exchangeName,
     routingKey,
-    messageJSON: { message: 'Hello World' },
+    messageJSON: { message: 'Hello World I' },
   });
 
-  const message = await amqp.consume({ channel, queueName });
+  await amqp.publish({
+    channel,
+    exchangeName,
+    routingKey,
+    messageJSON: { message: 'Hello World II' },
+  });
 
-  if (message) {
-    console.log('MESSAGE >', JSON.parse(message.content.toString()));
-  }
+  const handleMessageReceived = message => {
+    if (message) {
+      const messageJSON = JSON.parse(message.content.toString());
+
+      console.log('MESSAGE >', messageJSON);
+
+      // TODO: Switch statement
+    }
+  };
+
+  amqp.consume({
+    channel,
+    queueName,
+    onMessageReceived: handleMessageReceived,
+  });
 })();
 
-const mongodbConnectionString = 'mongodb://127.0.0.1/green-chamber';
-mongoose.connect(mongodbConnectionString, { useNewUrlParser: true });
+// const mongodbConnectionString = 'mongodb://127.0.0.1/green-chamber';
+// mongoose.connect(mongodbConnectionString, { useNewUrlParser: true });
 
-const app = express();
-const port = 3000;
+// const app = express();
+// const port = 3000;
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use('/api/', api());
+// app.use('/api/', api());
 
-app.listen(port, () => {
-  // eslint-disable-next-line no-console
-  console.log(`Server listening on port ${port}...`);
-});
+// app.listen(port, () => {
+//   // eslint-disable-next-line no-console
+//   console.log(`Server listening on port ${port}...`);
+// });
