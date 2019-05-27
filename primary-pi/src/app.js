@@ -61,18 +61,18 @@ import api from './api';
   });
 })();
 
-// const mongodbConnectionString = 'mongodb://127.0.0.1/green-chamber';
-// mongoose.connect(mongodbConnectionString, { useNewUrlParser: true });
+const mongodbConnectionString = 'mongodb://127.0.0.1/green-chamber';
+mongoose.connect(mongodbConnectionString, { useNewUrlParser: true });
 
-// const app = express();
-// const port = 3000;
+const app = express();
+const port = 3000;
 
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-// app.use('/api/', api());
+app.use('/api/', api());
 
-// app.listen(port, () => {
-//   // eslint-disable-next-line no-console
-//   console.log(`Server listening on port ${port}...`);
-// });
+app.listen(port, () => {
+  // eslint-disable-next-line no-console
+  console.log(`Server listening on port ${port}...`);
+});
