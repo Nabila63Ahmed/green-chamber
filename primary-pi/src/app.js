@@ -39,11 +39,18 @@ import api from './api';
 
   const handleMessageReceived = message => {
     if (message) {
+      /**
+       *  TODO: Validate that message content is a JSON.
+       *  If invalid JSON, early return.
+       *
+       *  See: isJSON() in https://github.com/chriso/validator.js/
+       */
+
       const messageJSON = JSON.parse(message.content.toString());
 
       console.log('MESSAGE >', messageJSON);
 
-      // TODO: Switch statement
+      // TODO: Implement conditional logic
     }
   };
 
