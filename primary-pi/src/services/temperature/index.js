@@ -1,10 +1,10 @@
 import { Schema, model } from 'mongoose';
 
-export const insertTemperature = ({ value, createdAt }) => {
+export const insertTemperatureRecord = ({ value, createdAt }) => {
   return temperatureModel.create({ value, createdAt });
 };
 
-export const getAllTemperatures = () => {
+export const getAllTemperatureRecords = () => {
   return temperatureModel.find().exec();
 };
 

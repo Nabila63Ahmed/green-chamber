@@ -1,10 +1,10 @@
 import { Schema, model } from 'mongoose';
 
-export const insertHumidity = ({ percentage, createdAt }) => {
+export const insertHumidityRecord = ({ percentage, createdAt }) => {
   return humidityModel.create({ percentage, createdAt });
 };
 
-export const getAllHumidities = () => {
+export const getAllHumidityRecords = () => {
   return humidityModel.find().exec();
 };
 

@@ -1,5 +1,14 @@
 import { Router } from 'express';
-import { insertTemperature, getAllTemperatures } from '../services/temperature';
+import {
+  insertTemperatureRecord,
+  getAllTemperatureRecords,
+} from '../services/temperature';
+import {
+  insertHumidityRecord,
+  getAllHumidityRecords,
+} from '../services/humidity';
+import { insertMotionRecord, getAllMotionRecords } from '../services/motion';
+import { insertEventRecord, getAllEventRecords } from '../services/event';
 
 export default () => {
   const api = Router();
@@ -13,7 +22,7 @@ export default () => {
 
   api.get('/temperatures', async (req, res) => {
     try {
-      const retrievedTemperatures = await getAllTemperatures();
+      const retrievedTemperatures = await getAllTemperatureRecords();
 
       return res.json({
         error: null,
@@ -32,7 +41,7 @@ export default () => {
 
   api.post('/temperatures', async (req, res) => {
     try {
-      const createdTemperature = await insertTemperature(req.body);
+      const createdTemperature = await insertTemperatureRecord(req.body);
 
       return res.json({
         error: null,

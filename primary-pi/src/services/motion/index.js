@@ -1,10 +1,10 @@
 import { Schema, model } from 'mongoose';
 
-export const setMotion = ({ value, createdAt }) => {
+export const insertMotionRecord = ({ value, createdAt }) => {
   return motionModel.create({ value, createdAt });
 };
 
-export const getAllMotionInformation = () => {
+export const getAllMotionRecords = () => {
   return motionModel.find().exec();
 };
 
@@ -13,4 +13,4 @@ const motionSchema = new Schema({
   createdAt: Number,
 });
 
-const motionModel = model('Motion', motionSchema, 'motionInformation');
+const motionModel = model('Motion', motionSchema, 'motion');
