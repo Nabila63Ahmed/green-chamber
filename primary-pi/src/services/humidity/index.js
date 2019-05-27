@@ -1,16 +1,16 @@
-import { Schema, model } from 'mongoose';
+import mongoose from 'mongoose';
 
-export const insertHumidityRecord = ({ percentage, createdAt }) => {
-  return humidityModel.create({ percentage, createdAt });
+export const insertHumidityRecord = ({ value, createdAt }) => {
+  return model.create({ value, createdAt });
 };
 
-export const getAllHumidityRecords = () => {
-  return humidityModel.find().exec();
+export const getHumidityRecords = () => {
+  return model.find().exec();
 };
 
-const humiditySchema = new Schema({
-  percentage: Number,
+const schema = new mongoose.Schema({
+  value: Number,
   createdAt: Number,
 });
 
-const humidityModel = model('Humidity', humiditySchema, 'humidities');
+const model = mongoose.model('HumidityRecord', schema, 'humidity-records');

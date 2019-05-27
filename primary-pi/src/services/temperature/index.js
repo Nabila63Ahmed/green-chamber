@@ -1,20 +1,20 @@
-import { Schema, model } from 'mongoose';
+import mongoose from 'mongoose';
 
 export const insertTemperatureRecord = ({ value, createdAt }) => {
-  return temperatureModel.create({ value, createdAt });
+  return model.create({ value, createdAt });
 };
 
-export const getAllTemperatureRecords = () => {
-  return temperatureModel.find().exec();
+export const getTemperatureRecords = () => {
+  return model.find().exec();
 };
 
-const temperatureSchema = new Schema({
+const schema = new mongoose.Schema({
   value: Number,
   createdAt: Number,
 });
 
-const temperatureModel = model(
-  'Temperature',
-  temperatureSchema,
-  'temperatures',
+const model = mongoose.model(
+  'TemperatureRecord',
+  schema,
+  'temperature-records',
 );

@@ -1,16 +1,16 @@
-import { Schema, model } from 'mongoose';
+import mongoose from 'mongoose';
 
 export const insertMotionRecord = ({ value, createdAt }) => {
-  return motionModel.create({ value, createdAt });
+  return model.create({ value, createdAt });
 };
 
-export const getAllMotionRecords = () => {
-  return motionModel.find().exec();
+export const getMotionRecords = () => {
+  return model.find().exec();
 };
 
-const motionSchema = new Schema({
+const schema = new mongoose.Schema({
   value: Number,
   createdAt: Number,
 });
 
-const motionModel = model('Motion', motionSchema, 'motion');
+const model = mongoose.model('MotionRecord', schema, 'motion-records');

@@ -1,18 +1,11 @@
 import { Router } from 'express';
 import {
   insertTemperatureRecord,
-  getAllTemperatureRecords,
+  getTemperatureRecords,
 } from '../services/temperature';
-import {
-  insertHumidityRecord,
-  getAllHumidityRecords,
-} from '../services/humidity';
-import { insertMotionRecord, getAllMotionRecords } from '../services/motion';
-import {
-  insertEventRecord,
-  insertEventRecords,
-  getAllEventRecords,
-} from '../services/event';
+import { insertHumidityRecord, getHumidityRecords } from '../services/humidity';
+import { insertMotionRecord, getMotionRecords } from '../services/motion';
+import { insertEvent, insertEvents, getEvents } from '../services/events';
 
 export default () => {
   const api = Router();
@@ -24,9 +17,9 @@ export default () => {
     });
   });
 
-  api.get('/temperatures', async (req, res) => {
+  api.get('/temperature', async (req, res) => {
     try {
-      const retrievedTemperatureRecords = await getAllTemperatureRecords();
+      const retrievedTemperatureRecords = await getTemperatureRecords();
 
       return res.json({
         error: null,
@@ -43,8 +36,10 @@ export default () => {
     }
   });
 
-  api.post('/temperatures', async (req, res) => {
+  api.post('/temperature', async (req, res) => {
     try {
+      /* TODO: Validate request body */
+
       const createdTemperatureRecord = await insertTemperatureRecord(req.body);
 
       return res.json({
@@ -61,9 +56,9 @@ export default () => {
     }
   });
 
-  api.get('/humidities', async (req, res) => {
+  api.get('/humidity', async (req, res) => {
     try {
-      const retrievedHumidityRecords = await getAllHumidityRecords();
+      const retrievedHumidityRecords = await getHumidityRecords();
 
       return res.json({
         error: null,
@@ -80,8 +75,10 @@ export default () => {
     }
   });
 
-  api.post('/humidities', async (req, res) => {
+  api.post('/humidity', async (req, res) => {
     try {
+      /* TODO: Validate request body */
+
       const createdHumidityRecord = await insertHumidityRecord(req.body);
 
       return res.json({
@@ -100,7 +97,7 @@ export default () => {
 
   api.get('/motion', async (req, res) => {
     try {
-      const retrievedMotionRecords = await getAllMotionRecords();
+      const retrievedMotionRecords = await getMotionRecords();
 
       return res.json({
         error: null,
@@ -119,6 +116,8 @@ export default () => {
 
   api.post('/motion', async (req, res) => {
     try {
+      /* TODO: Validate request body */
+
       const createdMotionRecord = await insertMotionRecord(req.body);
 
       return res.json({
@@ -137,13 +136,13 @@ export default () => {
 
   api.get('/events', async (req, res) => {
     try {
-      const retrievedEventRecords = await getAllEventRecords();
+      const retrievedEvents = await getEvents();
 
       return res.json({
         error: null,
         data: {
-          count: retrievedEventRecords.length,
-          eventRecords: retrievedEventRecords,
+          count: retrievedEvents.length,
+          events: retrievedEvents,
         },
       });
     } catch (error) {
@@ -156,31 +155,28 @@ export default () => {
 
   api.post('/events', async (req, res) => {
     try {
-      const createdEventRecords = await insertEventRecords(req.body);
+      if (Array.isArray(req.body)) {
+        /* TODO: Validate request body */
+
+        const createdEvents = await insertEvents(req.body);
+
+        return res.json({
+          error: null,
+          data: {
+            count: createdEvents.length,
+            events: createdEvents,
+          },
+        });
+      }
+
+      /* TODO: Validate request body */
+
+      const createdEvent = await insertEvent(req.body);
 
       return res.json({
         error: null,
         data: {
-          count: createdEventRecords.length,
-          eventRecords: createdEventRecords,
-        },
-      });
-    } catch (error) {
-      return res.status(500).json({
-        error: 'Internal Server Error',
-        data: null,
-      });
-    }
-  });
-
-  api.post('/event', async (req, res) => {
-    try {
-      const createdEventRecord = await insertEventRecord(req.body);
-
-      return res.json({
-        error: null,
-        data: {
-          eventRecord: createdEventRecord,
+          event: createdEvent,
         },
       });
     } catch (error) {
