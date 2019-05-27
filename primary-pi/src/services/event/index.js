@@ -9,6 +9,10 @@ export const insertEventRecord = ({
   return eventModel.create({ startTime, endTime, title, description });
 };
 
+export const insertEventRecords = events => {
+  return eventModel.create(events);
+};
+
 export const getAllEventRecords = () => {
   return eventModel.find().exec();
 };
