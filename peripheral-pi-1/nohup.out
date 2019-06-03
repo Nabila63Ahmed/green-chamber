@@ -1,0 +1,27 @@
+ [*] Waiting for logs. To exit press CTRL+C
+ [x] 'actuator.lcd':'Room occupied!!!'
+ [x] 'actuator.lcd':'Room occupied!!!'
+ [x] 'actuator.lcd':'Room occupied!!!'
+ [x] 'actuator.lcd':'Room occupied!!!'
+Traceback (most recent call last):
+  File "receive_lcd_instruction.py", line 25, in <module>
+    channel.start_consuming()
+  File "/usr/local/lib/python2.7/dist-packages/pika/adapters/blocking_connection.py", line 1857, in start_consuming
+    self._process_data_events(time_limit=None)
+  File "/usr/local/lib/python2.7/dist-packages/pika/adapters/blocking_connection.py", line 2018, in _process_data_events
+    self.connection.process_data_events(time_limit=time_limit)
+  File "/usr/local/lib/python2.7/dist-packages/pika/adapters/blocking_connection.py", line 835, in process_data_events
+    self._dispatch_channel_events()
+  File "/usr/local/lib/python2.7/dist-packages/pika/adapters/blocking_connection.py", line 567, in _dispatch_channel_events
+    impl_channel._get_cookie()._dispatch_events()
+  File "/usr/local/lib/python2.7/dist-packages/pika/adapters/blocking_connection.py", line 1485, in _dispatch_events
+    evt.properties, evt.body)
+  File "receive_lcd_instruction.py", line 20, in callback
+    setText(body)
+  File "/home/pi/Desktop/The_Green_Chamber/grove_rgb_lcd.py", line 51, in setText
+    bus.write_byte_data(DISPLAY_TEXT_ADDR,0x40,ord(c))
+  File "/usr/local/lib/python2.7/dist-packages/smbus_cffi-0.5.1-py2.7-linux-armv7l.egg/smbus/util.py", line 59, in validator
+    return fn(*args, **kwdefaults)
+  File "/usr/local/lib/python2.7/dist-packages/smbus_cffi-0.5.1-py2.7-linux-armv7l.egg/smbus/smbus.py", line 145, in write_byte_data
+    raise IOError(ffi.errno)
+IOError: 5

@@ -15,7 +15,8 @@ print(' [*] Waiting for logs. To exit press CTRL+C')
 def callback(ch, method, properties, body):
     print(" [x] %r:%r" % (method.routing_key, body))
     channel.basic_publish(exchange='topic_data', routing_key='actuator.lcd', body='Room occupied!!!')
-    print(" [x] Sent 'actuator.lcd':'Room occupied!!!'")
+    channel.basic_publish(exchange='topic_data', routing_key='actuator.plugwise+', body='1')
+    print(" [x] Sent 'actuator.lcd' and 'actuator.plugwise+'")
 
 channel.basic_consume(queue=queue_name, on_message_callback=callback, auto_ack=True)
 
