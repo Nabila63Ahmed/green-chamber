@@ -1,4 +1,4 @@
-# Peripheral Pi 1: PIR, LCD Screen
+# Peripheral Pi 1: PIR, LCD Screen, Light plugwise
 
 ## RabbitMQ Broker Configuration
 The RabbitMQ Broker/Server needs to be configured before it can be accessed from a remote machine.
@@ -21,4 +21,4 @@ The user needs to be created and given permissions for virtual host ('/' default
 
 The commands are entered in the RabbitMQ Command Prompt.
 
-To access a broker which is running on a windows computer, the windows firewall needs to be disabled.
+The windows firewall needs to be disabled to access a broker running on a windows computer.
