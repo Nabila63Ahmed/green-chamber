@@ -36,25 +36,25 @@ export default () => {
     }
   });
 
-  api.post('/temperature', async (req, res) => {
-    try {
-      /* TODO: Validate request body */
+  // api.post('/temperature', async (req, res) => {
+  //   try {
+  //     /* TODO: Validate request body */
 
-      const createdTemperatureRecord = await insertTemperatureRecord(req.body);
+  //     const createdTemperatureRecord = await insertTemperatureRecord(req.body);
 
-      return res.json({
-        error: null,
-        data: {
-          temperatureRecord: createdTemperatureRecord,
-        },
-      });
-    } catch (error) {
-      return res.status(500).json({
-        error: 'Internal Server Error',
-        data: null,
-      });
-    }
-  });
+  //     return res.json({
+  //       error: null,
+  //       data: {
+  //         temperatureRecord: createdTemperatureRecord,
+  //       },
+  //     });
+  //   } catch (error) {
+  //     return res.status(500).json({
+  //       error: 'Internal Server Error',
+  //       data: null,
+  //     });
+  //   }
+  // });
 
   api.get('/humidity', async (req, res) => {
     try {
@@ -75,25 +75,25 @@ export default () => {
     }
   });
 
-  api.post('/humidity', async (req, res) => {
-    try {
-      /* TODO: Validate request body */
+  // api.post('/humidity', async (req, res) => {
+  //   try {
+  //     /* TODO: Validate request body */
 
-      const createdHumidityRecord = await insertHumidityRecord(req.body);
+  //     const createdHumidityRecord = await insertHumidityRecord(req.body);
 
-      return res.json({
-        error: null,
-        data: {
-          humidityRecord: createdHumidityRecord,
-        },
-      });
-    } catch (error) {
-      return res.status(500).json({
-        error: 'Internal Server Error',
-        data: null,
-      });
-    }
-  });
+  //     return res.json({
+  //       error: null,
+  //       data: {
+  //         humidityRecord: createdHumidityRecord,
+  //       },
+  //     });
+  //   } catch (error) {
+  //     return res.status(500).json({
+  //       error: 'Internal Server Error',
+  //       data: null,
+  //     });
+  //   }
+  // });
 
   api.get('/motion', async (req, res) => {
     try {
@@ -114,25 +114,25 @@ export default () => {
     }
   });
 
-  api.post('/motion', async (req, res) => {
-    try {
-      /* TODO: Validate request body */
+  // api.post('/motion', async (req, res) => {
+  //   try {
+  //     /* TODO: Validate request body */
 
-      const createdMotionRecord = await insertMotionRecord(req.body);
+  //     const createdMotionRecord = await insertMotionRecord(req.body);
 
-      return res.json({
-        error: null,
-        data: {
-          motionRecord: createdMotionRecord,
-        },
-      });
-    } catch (error) {
-      return res.status(500).json({
-        error: 'Internal Server Error',
-        data: null,
-      });
-    }
-  });
+  //     return res.json({
+  //       error: null,
+  //       data: {
+  //         motionRecord: createdMotionRecord,
+  //       },
+  //     });
+  //   } catch (error) {
+  //     return res.status(500).json({
+  //       error: 'Internal Server Error',
+  //       data: null,
+  //     });
+  //   }
+  // });
 
   api.get('/events', async (req, res) => {
     try {
