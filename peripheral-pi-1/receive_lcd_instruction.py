@@ -5,20 +5,21 @@ credentials = pika.PlainCredentials('admin', 'admin')
 connection = pika.BlockingConnection(pika.ConnectionParameters('192.168.178.131', 5672, '/', credentials))
 channel = connection.channel()
 
-channel.exchange_declare(exchange='topic_data', exchange_type='topic')
+exchange_name = 'actuators-exchange'
+routing_key_name = 'actuators.lcd'
+queue_name = 'actuators.lcd.queue'
 
-result = channel.queue_declare('', exclusive=True)
-queue_name = result.method.queue
+channel.exchange_declare(exchange=exchange_name, exchange_type='topic')
+channel.queue_declare(queue_name, durable=True, exclusive=True)
 
-channel.queue_bind(exchange='topic_data', queue=queue_name, routing_key='actuator.lcd')
+channel.queue_bind(exchange=exchange_name, queue=queue_name, routing_key=routing_key_name)
 print(' [*] Waiting for logs. To exit press CTRL+C')
 
-
 def callback(ch, method, properties, body):
-    print(" [x] %r:%r" % (method.routing_key, body))
+    message = body.decode()
+    print(" [x] %r:%r" % (method.routing_key, message))
     setRGB(0,255,0)
-    setText(body)
-
+    setText(message)
 
 channel.basic_consume(queue=queue_name, on_message_callback=callback, auto_ack=True)
 

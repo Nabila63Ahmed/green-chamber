@@ -25,3 +25,75 @@ Traceback (most recent call last):
   File "/usr/local/lib/python2.7/dist-packages/smbus_cffi-0.5.1-py2.7-linux-armv7l.egg/smbus/smbus.py", line 145, in write_byte_data
     raise IOError(ffi.errno)
 IOError: 5
+Traceback (most recent call last):
+  File "receive_lcd_instruction.py", line 5, in <module>
+    connection = pika.BlockingConnection(pika.ConnectionParameters('192.168.178.131', 5672, '/', credentials))
+  File "/usr/local/lib/python2.7/dist-packages/pika/adapters/blocking_connection.py", line 360, in __init__
+    self._impl = self._create_connection(parameters, _impl_class)
+  File "/usr/local/lib/python2.7/dist-packages/pika/adapters/blocking_connection.py", line 451, in _create_connection
+    raise self._reap_last_connection_workflow_error(error)
+pika.exceptions.AMQPConnectionError
+Traceback (most recent call last):
+  File "receive_plugwise_instruction.py", line 11, in <module>
+    connection = pika.BlockingConnection(pika.ConnectionParameters('192.168.178.131', 5672, '/', credentials))
+  File "/usr/local/lib/python2.7/dist-packages/pika/adapters/blocking_connection.py", line 360, in __init__
+    self._impl = self._create_connection(parameters, _impl_class)
+  File "/usr/local/lib/python2.7/dist-packages/pika/adapters/blocking_connection.py", line 451, in _create_connection
+    raise self._reap_last_connection_workflow_error(error)
+pika.exceptions.AMQPConnectionError
+Traceback (most recent call last):
+  File "send_pir_motion.py", line 6, in <module>
+    connection = pika.BlockingConnection(pika.ConnectionParameters('192.168.178.131', 5672, '/', credentials))
+  File "/usr/local/lib/python2.7/dist-packages/pika/adapters/blocking_connection.py", line 360, in __init__
+    self._impl = self._create_connection(parameters, _impl_class)
+  File "/usr/local/lib/python2.7/dist-packages/pika/adapters/blocking_connection.py", line 451, in _create_connection
+    raise self._reap_last_connection_workflow_error(error)
+pika.exceptions.AMQPConnectionError
+Traceback (most recent call last):
+  File "receive_lcd_instruction.py", line 5, in <module>
+    connection = pika.BlockingConnection(pika.ConnectionParameters('192.168.178.131', 5672, '/', credentials))
+  File "/usr/local/lib/python2.7/dist-packages/pika/adapters/blocking_connection.py", line 360, in __init__
+    self._impl = self._create_connection(parameters, _impl_class)
+  File "/usr/local/lib/python2.7/dist-packages/pika/adapters/blocking_connection.py", line 451, in _create_connection
+    raise self._reap_last_connection_workflow_error(error)
+pika.exceptions.AMQPConnectionError
+Traceback (most recent call last):
+  File "receive_plugwise_instruction.py", line 11, in <module>
+    connection = pika.BlockingConnection(pika.ConnectionParameters('192.168.178.131', 5672, '/', credentials))
+  File "/usr/local/lib/python2.7/dist-packages/pika/adapters/blocking_connection.py", line 360, in __init__
+    self._impl = self._create_connection(parameters, _impl_class)
+  File "/usr/local/lib/python2.7/dist-packages/pika/adapters/blocking_connection.py", line 451, in _create_connection
+    raise self._reap_last_connection_workflow_error(error)
+pika.exceptions.AMQPConnectionError
+Traceback (most recent call last):
+  File "send_pir_motion.py", line 6, in <module>
+    connection = pika.BlockingConnection(pika.ConnectionParameters('192.168.178.131', 5672, '/', credentials))
+  File "/usr/local/lib/python2.7/dist-packages/pika/adapters/blocking_connection.py", line 360, in __init__
+    self._impl = self._create_connection(parameters, _impl_class)
+  File "/usr/local/lib/python2.7/dist-packages/pika/adapters/blocking_connection.py", line 451, in _create_connection
+    raise self._reap_last_connection_workflow_error(error)
+pika.exceptions.AMQPConnectionError
+Traceback (most recent call last):
+  File "receive_lcd_instruction.py", line 5, in <module>
+    connection = pika.BlockingConnection(pika.ConnectionParameters('192.168.178.131', 5672, '/', credentials))
+  File "/usr/local/lib/python2.7/dist-packages/pika/adapters/blocking_connection.py", line 360, in __init__
+    self._impl = self._create_connection(parameters, _impl_class)
+  File "/usr/local/lib/python2.7/dist-packages/pika/adapters/blocking_connection.py", line 451, in _create_connection
+    raise self._reap_last_connection_workflow_error(error)
+pika.exceptions.AMQPConnectionError
+Traceback (most recent call last):
+  File "receive_plugwise_instruction.py", line 11, in <module>
+    connection = pika.BlockingConnection(pika.ConnectionParameters('192.168.178.131', 5672, '/', credentials))
+  File "/usr/local/lib/python2.7/dist-packages/pika/adapters/blocking_connection.py", line 360, in __init__
+    self._impl = self._create_connection(parameters, _impl_class)
+  File "/usr/local/lib/python2.7/dist-packages/pika/adapters/blocking_connection.py", line 451, in _create_connection
+    raise self._reap_last_connection_workflow_error(error)
+pika.exceptions.AMQPConnectionError
+Traceback (most recent call last):
+  File "send_pir_motion.py", line 6, in <module>
+    connection = pika.BlockingConnection(pika.ConnectionParameters('192.168.178.131', 5672, '/', credentials))
+  File "/usr/local/lib/python2.7/dist-packages/pika/adapters/blocking_connection.py", line 360, in __init__
+    self._impl = self._create_connection(parameters, _impl_class)
+  File "/usr/local/lib/python2.7/dist-packages/pika/adapters/blocking_connection.py", line 451, in _create_connection
+    raise self._reap_last_connection_workflow_error(error)
+pika.exceptions.AMQPConnectionError
