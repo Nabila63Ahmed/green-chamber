@@ -3,6 +3,9 @@ import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import * as amqp from './amqp';
 import api from './api';
+import calendar from './calendar-api/calendar';
+
+calendar();
 
 (async () => {
   const connectionUri = 'amqp://localhost';
