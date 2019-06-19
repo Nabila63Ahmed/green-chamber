@@ -1,4 +1,5 @@
 import { readFile, writeFile } from 'fs';
+import path from 'path';
 import { createInterface } from 'readline';
 import { google } from 'googleapis';
 
@@ -7,11 +8,12 @@ const SCOPES = ['https://www.googleapis.com/auth/calendar.readonly'];
 // The file token.json stores the user's access and refresh tokens, and is
 // created automatically when the authorization flow completes for the first
 // time.
-const TOKEN_PATH = 'src/calendar-api/token.json';
+const TOKEN_PATH = path.join(__dirname, 'token.json');
+const CREDENTIALS_PATH = path.join(__dirname, 'credentials.json');
 
 // Load client secrets from a local file.
 export default function printEvents() {
-  readFile('src/calendar-api/credentials.json', (err, content) => {
+  readFile(CREDENTIALS_PATH, (err, content) => {
     if (err) return console.log('Error loading client secret file:', err);
     // Authorize a client with credentials, then call the Google Calendar API.
     authorize(JSON.parse(content), listEvents);
