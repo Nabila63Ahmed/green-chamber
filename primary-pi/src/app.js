@@ -3,11 +3,35 @@ import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import * as amqp from './amqp';
 import api from './api';
-import calendar from './calendar-api/calendar';
-
-calendar();
+import {
+  initializeJWT,
+  initializeCalendar,
+  getEvents,
+  key,
+} from './datasources/google-calendar';
 
 (async () => {
+  const jwt = initializeJWT({
+    key,
+    scopes: 'https://www.googleapis.com/auth/calendar.readonly',
+  });
+
+  const calendar = initializeCalendar({
+    jwt,
+  });
+
+  const events = await getEvents({
+    calendar,
+    query: {
+      calendarId: 'green.chamber.iot@gmail.com',
+      timeMin: new Date().toISOString(),
+      singleEvents: true,
+      orderBy: 'startTime',
+    },
+  });
+
+  console.log('EVENTS >', events);
+
   const connectionUri = 'amqp://localhost';
   const exchangeName1 = 'sensors-exchange';
   const exchangeName2 = 'actuators-exchange';
@@ -142,7 +166,7 @@ const mongodbConnectionString = 'mongodb://127.0.0.1/green-chamber';
 mongoose.connect(mongodbConnectionString, { useNewUrlParser: true });
 
 const app = express();
-const port = 3001;
+const port = 3000;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
