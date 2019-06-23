@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import * as amqp from './amqp';
 import api from './api';
+import logic from './logic';
 import {
   initializeJWT,
   initializeCalendar,
@@ -35,7 +36,6 @@ import {
   const connectionUri = 'amqp://localhost';
   const exchangeName1 = 'sensors-exchange';
   const exchangeName2 = 'actuators-exchange';
-  // const exchangeName3 = 'api-exchange';
 
   const queueName1 = 'sensors.temperature.queue';
   const queueName2 = 'sensors.humidity.queue';
@@ -43,7 +43,6 @@ import {
   const queueName4 = 'actuators.plugwise.lamp.queue';
   const queueName5 = 'actuators.plugwise.fan.queue';
   const queueName6 = 'actuators.lcd.queue';
-  // const queueName7 = 'api.google.calender.queue';
 
   const routingKey1 = 'sensors.temperature';
   const routingKey2 = 'sensors.humidity';
@@ -51,14 +50,12 @@ import {
   const routingKey4 = 'actuators.plugwise.lamp';
   const routingKey5 = 'actuators.plugwise.fan';
   const routingKey6 = 'actuators.lcd';
-  // const routingKey7 = 'api.google.calender';
 
   const connection = await amqp.createConnection({ connectionUri });
   const channel = await amqp.createChannel({ connection });
 
   await amqp.assertExchange({ channel, exchangeName: exchangeName1 });
   await amqp.assertExchange({ channel, exchangeName: exchangeName2 });
-  // await amqp.assertExchange({ channel, exchangeName: exchangeName3 });
 
   await amqp.assertQueue({ channel, queueName: queueName1 });
   await amqp.assertQueue({ channel, queueName: queueName2 });
@@ -66,7 +63,6 @@ import {
   await amqp.assertQueue({ channel, queueName: queueName4 });
   await amqp.assertQueue({ channel, queueName: queueName5 });
   await amqp.assertQueue({ channel, queueName: queueName6 });
-  // await amqp.assertQueue({ channel, queueName: queueName7 });
 
   await amqp.bindQueueToExchange({
     channel,
@@ -110,13 +106,6 @@ import {
     routingKey: routingKey6,
   });
 
-  // await amqp.bindQueueToExchange({
-  //   channel,
-  //   exchangeName: exchangeName3,
-  //   queueName: queueName7,
-  //   routingKey: routingKey7,
-  // });
-
   await amqp.publish({
     channel,
     exchangeName: exchangeName1,
@@ -139,7 +128,6 @@ import {
        *
        *  See: isJSON() in https://github.com/chriso/validator.js/
        */
-
       const messageJSON = JSON.parse(message.content.toString());
 
       console.log('MESSAGE >', messageJSON);
@@ -163,14 +151,22 @@ import {
 
   amqp.consume({
     channel,
+    queueName: queueName3,
+    onMessageReceived: handleMessageReceived,
+  });
+
+  amqp.consume({
+    channel,
     queueName: queueName4,
     onMessageReceived: handleMessageReceived,
   });
+
   amqp.consume({
     channel,
     queueName: queueName5,
     onMessageReceived: handleMessageReceived,
   });
+
   amqp.consume({
     channel,
     queueName: queueName6,
