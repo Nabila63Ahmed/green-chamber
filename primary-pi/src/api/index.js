@@ -17,7 +17,7 @@ import {
 } from '../services/motion';
 // import { insertEvent, insertEvents, getEvents } from '../services/events';
 
-export default ({ amqp, channel, calendar, state }) => {
+export default ({ amqp, channel, calendar, getEvents, state }) => {
   const api = Router();
 
   api.get('/ping', (req, res) => {
@@ -95,7 +95,7 @@ export default ({ amqp, channel, calendar, state }) => {
       await amqp.publish({
         channel,
         exchangeName: 'actuators-exchange',
-        routingKey: 'actuators.plugwise.fan.queue',
+        routingKey: 'actuators.plugwise.fan',
         messageJSON: { value },
       });
 
@@ -220,11 +220,11 @@ export default ({ amqp, channel, calendar, state }) => {
     }
   });
 
-  api.get('/light', (req, res) => {
+  api.get('/lamp', (req, res) => {
     return res.json({ state });
   });
 
-  api.post('/light', async (req, res) => {
+  api.post('/lamp', async (req, res) => {
     if (!_.isNil(req.body.value) && _.isBoolean(req.body.value)) {
       const value = req.body.value;
 
@@ -232,7 +232,7 @@ export default ({ amqp, channel, calendar, state }) => {
       await amqp.publish({
         channel,
         exchangeName: 'actuators-exchange',
-        routingKey: 'actuators.plugwise.lamp.queue',
+        routingKey: 'actuators.plugwise.lamp',
         messageJSON: { value },
       });
 
@@ -249,14 +249,23 @@ export default ({ amqp, channel, calendar, state }) => {
 
   api.get('/events', async (req, res) => {
     try {
-      // const retrievedEvents = await getEvents();
-      // return res.json({
-      //   error: null,
-      //   data: {
-      //     count: retrievedEvents.length,
-      //     events: retrievedEvents,
-      //   },
-      // });
+      const events = await getEvents({
+        calendar,
+        query: {
+          calendarId: 'green.chamber.iot@gmail.com',
+          timeMin: new Date().toISOString(),
+          singleEvents: true,
+          orderBy: 'startTime',
+        },
+      });
+
+      return res.json({
+        error: null,
+        data: {
+          count: events.length,
+          events,
+        },
+      });
     } catch (error) {
       return res.status(500).json({
         error: 'Internal Server Error',
@@ -267,20 +276,60 @@ export default ({ amqp, channel, calendar, state }) => {
 
   api.get('/events/current', async (req, res) => {
     try {
-      // const retrievedEvents = await getEvents();
-      // return res.json({
-      //   error: null,
-      //   data: {
-      //     count: retrievedEvents.length,
-      //     events: retrievedEvents,
-      //   },
-      // });
+      const minTime = new Date();
+      minTime.setTime(minTime.getTime() - 1 * 60 * 1000);
+      const maxTime = new Date();
+      maxTime.setTime(maxTime.getTime() + 1 * 60 * 1000);
+      const events = await getEvents({
+        calendar,
+        query: {
+          calendarId: 'green.chamber.iot@gmail.com',
+          timeMin: minTime.toISOString(),
+          timeMax: maxTime.toISOString(),
+          maxResults: 10,
+        },
+      });
+      if (events.length) {
+        const text = "There's an ongoing event";
+        state.lcdDisplayText = text;
+
+        await amqp.publish({
+          channel,
+          exchangeName: 'actuators-exchange',
+          routingKey: 'actuators.lcd',
+          messageJSON: { value: text },
+        });
+        return res.json({
+          error: null,
+          data: {
+            count: events.length,
+            events,
+          },
+        });
+      }
+      const text = 'No ongoing event';
+      state.lcdDisplayText = text;
+
+      await amqp.publish({
+        channel,
+        exchangeName: 'actuators-exchange',
+        routingKey: 'actuators.lcd',
+        messageJSON: { value: text },
+      });
+      return res.json({
+        error: null,
+        data: 'No current event',
+      });
     } catch (error) {
       return res.status(500).json({
         error: 'Internal Server Error',
         data: null,
       });
     }
+  });
+
+  api.get('/lcd', (req, res) => {
+    return res.json({ state });
   });
 
   return api;

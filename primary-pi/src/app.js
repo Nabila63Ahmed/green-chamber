@@ -161,6 +161,22 @@ import {
     onMessageReceived: handleMessageReceived,
   });
 
+  amqp.consume({
+    channel,
+    queueName: queueName4,
+    onMessageReceived: handleMessageReceived,
+  });
+  amqp.consume({
+    channel,
+    queueName: queueName5,
+    onMessageReceived: handleMessageReceived,
+  });
+  amqp.consume({
+    channel,
+    queueName: queueName6,
+    onMessageReceived: handleMessageReceived,
+  });
+
   const state = {
     isFanOn: false,
     isLampOn: false,
@@ -176,7 +192,7 @@ import {
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
 
-  app.use('/api/', api({ amqp, channel, calendar, state }));
+  app.use('/api/', api({ amqp, channel, calendar, getEvents, state }));
 
   app.listen(port, () => {
     // eslint-disable-next-line no-console
