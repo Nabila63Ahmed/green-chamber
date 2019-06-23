@@ -35,7 +35,7 @@ import {
   const connectionUri = 'amqp://localhost';
   const exchangeName1 = 'sensors-exchange';
   const exchangeName2 = 'actuators-exchange';
-  const exchangeName3 = 'api-exchange';
+  // const exchangeName3 = 'api-exchange';
 
   const queueName1 = 'sensors.temperature.queue';
   const queueName2 = 'sensors.humidity.queue';
@@ -43,7 +43,7 @@ import {
   const queueName4 = 'actuators.plugwise.lamp.queue';
   const queueName5 = 'actuators.plugwise.fan.queue';
   const queueName6 = 'actuators.lcd.queue';
-  const queueName7 = 'api.google.calender.queue';
+  // const queueName7 = 'api.google.calender.queue';
 
   const routingKey1 = 'sensors.temperature';
   const routingKey2 = 'sensors.humidity';
@@ -51,14 +51,14 @@ import {
   const routingKey4 = 'actuators.plugwise.lamp';
   const routingKey5 = 'actuators.plugwise.fan';
   const routingKey6 = 'actuators.lcd';
-  const routingKey7 = 'api.google.calender';
+  // const routingKey7 = 'api.google.calender';
 
   const connection = await amqp.createConnection({ connectionUri });
   const channel = await amqp.createChannel({ connection });
 
   await amqp.assertExchange({ channel, exchangeName: exchangeName1 });
   await amqp.assertExchange({ channel, exchangeName: exchangeName2 });
-  await amqp.assertExchange({ channel, exchangeName: exchangeName3 });
+  // await amqp.assertExchange({ channel, exchangeName: exchangeName3 });
 
   await amqp.assertQueue({ channel, queueName: queueName1 });
   await amqp.assertQueue({ channel, queueName: queueName2 });
@@ -66,7 +66,7 @@ import {
   await amqp.assertQueue({ channel, queueName: queueName4 });
   await amqp.assertQueue({ channel, queueName: queueName5 });
   await amqp.assertQueue({ channel, queueName: queueName6 });
-  await amqp.assertQueue({ channel, queueName: queueName7 });
+  // await amqp.assertQueue({ channel, queueName: queueName7 });
 
   await amqp.bindQueueToExchange({
     channel,
@@ -110,12 +110,12 @@ import {
     routingKey: routingKey6,
   });
 
-  await amqp.bindQueueToExchange({
-    channel,
-    exchangeName: exchangeName3,
-    queueName: queueName7,
-    routingKey: routingKey7,
-  });
+  // await amqp.bindQueueToExchange({
+  //   channel,
+  //   exchangeName: exchangeName3,
+  //   queueName: queueName7,
+  //   routingKey: routingKey7,
+  // });
 
   await amqp.publish({
     channel,
@@ -160,20 +160,26 @@ import {
     queueName: queueName2,
     onMessageReceived: handleMessageReceived,
   });
+
+  const state = {
+    isFanOn: false,
+    isLampOn: false,
+    lcdDisplayText: '',
+  };
+
+  const mongodbConnectionString = 'mongodb://127.0.0.1/green-chamber';
+  mongoose.connect(mongodbConnectionString, { useNewUrlParser: true });
+
+  const app = express();
+  const port = 3000;
+
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: true }));
+
+  app.use('/api/', api({ amqp, channel, calendar, state }));
+
+  app.listen(port, () => {
+    // eslint-disable-next-line no-console
+    console.log(`Server listening on port ${port}...`);
+  });
 })();
-
-const mongodbConnectionString = 'mongodb://127.0.0.1/green-chamber';
-mongoose.connect(mongodbConnectionString, { useNewUrlParser: true });
-
-const app = express();
-const port = 3000;
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-app.use('/api/', api());
-
-app.listen(port, () => {
-  // eslint-disable-next-line no-console
-  console.log(`Server listening on port ${port}...`);
-});
