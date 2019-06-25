@@ -21,17 +21,17 @@ import {
     jwt,
   });
 
-  const events = await getEvents({
-    calendar,
-    query: {
-      calendarId: 'green.chamber.iot@gmail.com',
-      timeMin: new Date().toISOString(),
-      singleEvents: true,
-      orderBy: 'startTime',
-    },
-  });
+  // const events = await getEvents({
+  //   calendar,
+  //   query: {
+  //     calendarId: 'green.chamber.iot@gmail.com',
+  //     timeMin: new Date().toISOString(),
+  //     singleEvents: true,
+  //     orderBy: 'startTime',
+  //   },
+  // });
 
-  console.log('EVENTS >', events);
+  // console.log('EVENTS >', events);
 
   const connectionUri = 'amqp://localhost';
   const exchangeName1 = 'sensors-exchange';
@@ -106,19 +106,19 @@ import {
     routingKey: routingKey6,
   });
 
-  await amqp.publish({
-    channel,
-    exchangeName: exchangeName1,
-    routingKey: routingKey1,
-    messageJSON: { value: 25.4, createdAt: 647284 },
-  });
+  // await amqp.publish({
+  //   channel,
+  //   exchangeName: exchangeName1,
+  //   routingKey: routingKey1,
+  //   messageJSON: { value: 25.4, createdAt: 647284 },
+  // });
 
-  await amqp.publish({
-    channel,
-    exchangeName: exchangeName1,
-    routingKey: routingKey2,
-    messageJSON: { value: 80, createdAt: 789800 },
-  });
+  // await amqp.publish({
+  //   channel,
+  //   exchangeName: exchangeName1,
+  //   routingKey: routingKey2,
+  //   messageJSON: { value: 80, createdAt: 789800 },
+  // });
 
   const handleMessageReceived = message => {
     if (message) {
@@ -155,23 +155,23 @@ import {
     onMessageReceived: handleMessageReceived,
   });
 
-  amqp.consume({
-    channel,
-    queueName: queueName4,
-    onMessageReceived: handleMessageReceived,
-  });
+  // amqp.consume({
+  //   channel,
+  //   queueName: queueName4,
+  //   onMessageReceived: handleMessageReceived,
+  // });
 
-  amqp.consume({
-    channel,
-    queueName: queueName5,
-    onMessageReceived: handleMessageReceived,
-  });
+  // amqp.consume({
+  //   channel,
+  //   queueName: queueName5,
+  //   onMessageReceived: handleMessageReceived,
+  // });
 
-  amqp.consume({
-    channel,
-    queueName: queueName6,
-    onMessageReceived: handleMessageReceived,
-  });
+  // amqp.consume({
+  //   channel,
+  //   queueName: queueName6,
+  //   onMessageReceived: handleMessageReceived,
+  // });
 
   const state = {
     isFanOn: false,
