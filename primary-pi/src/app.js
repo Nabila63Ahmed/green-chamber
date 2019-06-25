@@ -62,9 +62,9 @@ import {
   await amqp.assertQueue({ channel, queueName: queueName1 });
   await amqp.assertQueue({ channel, queueName: queueName2 });
   await amqp.assertQueue({ channel, queueName: queueName3 });
-  await amqp.assertQueue({ channel, queueName: queueName4 });
-  await amqp.assertQueue({ channel, queueName: queueName5 });
-  await amqp.assertQueue({ channel, queueName: queueName6 });
+  // await amqp.assertQueue({ channel, queueName: queueName4 });
+  // await amqp.assertQueue({ channel, queueName: queueName5 });
+  // await amqp.assertQueue({ channel, queueName: queueName6 });
 
   await amqp.bindQueueToExchange({
     channel,
@@ -84,29 +84,29 @@ import {
     channel,
     exchangeName: exchangeName1,
     queueName: queueName3,
-    routingKey3,
+    routingKey: routingKey3,
   });
 
-  await amqp.bindQueueToExchange({
-    channel,
-    exchangeName: exchangeName2,
-    queueName: queueName4,
-    routingKey: routingKey4,
-  });
+  // await amqp.bindQueueToExchange({
+  //   channel,
+  //   exchangeName: exchangeName2,
+  //   queueName: queueName4,
+  //   routingKey: routingKey4,
+  // });
 
-  await amqp.bindQueueToExchange({
-    channel,
-    exchangeName: exchangeName2,
-    queueName: queueName5,
-    routingKey: routingKey5,
-  });
+  // await amqp.bindQueueToExchange({
+  //   channel,
+  //   exchangeName: exchangeName2,
+  //   queueName: queueName5,
+  //   routingKey: routingKey5,
+  // });
 
-  await amqp.bindQueueToExchange({
-    channel,
-    exchangeName: exchangeName2,
-    queueName: queueName6,
-    routingKey: routingKey6,
-  });
+  // await amqp.bindQueueToExchange({
+  //   channel,
+  //   exchangeName: exchangeName2,
+  //   queueName: queueName6,
+  //   routingKey: routingKey6,
+  // });
 
   // await amqp.publish({
   //   channel,
