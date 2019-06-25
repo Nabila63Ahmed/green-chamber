@@ -286,6 +286,8 @@ export default ({ amqp, channel, calendar, getEvents, state }) => {
           calendarId: 'green.chamber.iot@gmail.com',
           timeMin: minTime.toISOString(),
           timeMax: maxTime.toISOString(),
+          singleEvents: true,
+          orderBy: 'startTime',
           maxResults: 10,
         },
       });
