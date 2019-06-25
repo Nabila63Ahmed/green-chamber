@@ -3,15 +3,14 @@ import grovepi
 import pika
 import json
 import time
+from config import *
 
-credentials = pika.PlainCredentials('admin', 'admin')
-connection = pika.BlockingConnection(pika.ConnectionParameters('192.168.178.131', 5672, '/', credentials))
+credentials = pika.PlainCredentials(username, password)
+connection = pika.BlockingConnection(pika.ConnectionParameters(ip, port, host, credentials))
 channel = connection.channel()
 
 exchange_name = 'sensors-exchange'
 routing_key_name = 'sensors.motion'
-
-channel.exchange_declare(exchange=exchange_name, exchange_type='topic')
 
 pir_sensor = 8
 motion=0

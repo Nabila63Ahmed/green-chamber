@@ -3,16 +3,15 @@ import grovepi
 import pika
 import json
 import time
+from config import *
 
-credentials = pika.PlainCredentials('admin', 'admin')
-connection = pika.BlockingConnection(pika.ConnectionParameters('192.168.178.131', 5672, '/', credentials))
+credentials = pika.PlainCredentials(username, password)
+connection = pika.BlockingConnection(pika.ConnectionParameters(ip, port, host, credentials))
 channel = connection.channel()
 
 exchange_name = 'sensors-exchange'
 routing_key_temperature = 'sensors.temperature'
 routing_key_humidity = 'sensors.humidity'
-
-channel.exchange_declare(exchange=exchange_name, exchange_type='topic')
 
 port=7
 sensor=0
