@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import { insertTemperatureRecord } from '../services/temperature';
 import { insertHumidityRecord } from '../services/humidity';
 import { insertMotionRecord } from '../services/motion';
@@ -6,14 +5,14 @@ import { insertMotionRecord } from '../services/motion';
 export const storeSensorData = ({ routingKey, message }) => {
   const route = routingKey.split('.');
 
-  if (_.isEqual(route[0], 'sensors')) {
+  if (route[0] === 'sensors') {
     const type = route[1];
 
-    if (_.isEqual(type, 'temperature')) {
+    if (type === 'temperature') {
       return insertTemperatureRecord(message);
     }
 
-    if (_.isEqual(type, 'humidity')) {
+    if (type === 'humidity') {
       return insertHumidityRecord(message);
     }
 
