@@ -1,9 +1,11 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import validator from 'validator';
+import * as _ from 'lodash';
 import mongoose from 'mongoose';
 import * as amqp from './amqp';
 import api from './api';
-import logic from './logic';
+import * as logic from './logic';
 import {
   initializeJWT,
   initializeCalendar,
@@ -120,20 +122,26 @@ import {
   //   messageJSON: { value: 80, createdAt: 789800 },
   // });
 
-  const handleMessageReceived = message => {
+  const handleMessageReceived = async message => {
     if (message) {
-      /**
-       *  TODO: Validate that message content is a JSON.
-       *  If invalid JSON, early return.
-       *
-       *  See: isJSON() in https://github.com/chriso/validator.js/
-       */
-      const messageJSON = JSON.parse(message.content.toString());
+      if (
+        _.isNil(message.content) ||
+        !validator.isJSON(message.content.toString())
+      ) {
+        console.log('Error > Incorrect message content type');
+        return;
+      }
+      // TODO: Implement conditional logic
 
+      const messageJSON = JSON.parse(message.content.toString());
+      if (!_.isNil(messageJSON.value) && !_.isNil(messageJSON.createdAt)) {
+        await logic.storeSensorData({
+          routingKey: message.fields.routingKey,
+          message: messageJSON,
+        });
+      }
       console.log('MESSAGE >', messageJSON);
       console.log('ROUTING KEY >', message.fields.routingKey);
-
-      // TODO: Implement conditional logic
     }
   };
 

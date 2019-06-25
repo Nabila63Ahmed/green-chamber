@@ -26,7 +26,7 @@ export const assertExchange = ({ channel, exchangeName }) => {
 };
 
 export const assertQueue = ({ channel, queueName }) => {
-  return channel.assertQueue(queueName, { exclusive: false });
+  return channel.assertQueue(queueName, { exclusive: true });
 };
 
 export const createChannel = ({ connection }) => {
