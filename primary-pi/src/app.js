@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import bodyParser from 'body-parser';
 import validator from 'validator';
 import * as _ from 'lodash';
@@ -191,10 +192,11 @@ import {
   mongoose.connect(mongodbConnectionString, { useNewUrlParser: true });
 
   const app = express();
-  const port = 3000;
+  const port = 4000;
 
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(cors());
 
   app.use('/api/', api({ amqp, channel, calendar, getEvents, state }));
 
