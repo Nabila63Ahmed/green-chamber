@@ -35,7 +35,7 @@ class App extends React.Component {
     return (
       <div>
         <LineChart
-          width={400}
+          width={window.innerWidth - 10}
           height={300}
           margin={{ top: 30, bottom: 30, left: 30, right: 30 }}
           data={this.state.temperatures}
@@ -45,14 +45,14 @@ class App extends React.Component {
           </XAxis>
 
           <YAxis>
-            <Label value="Temperature" angle={-90} position="insideLeft" />
+            <Label value="Temperature (°C)" angle={-90} position="insideLeft" />
           </YAxis>
 
           <Line type="monotone" dataKey="value" stroke="#8884d8" />
         </LineChart>
 
         <LineChart
-          width={400}
+          width={window.innerWidth - 10}
           height={300}
           margin={{ top: 30, bottom: 30, left: 30, right: 30 }}
           data={this.state.humidities}
@@ -62,7 +62,7 @@ class App extends React.Component {
           </XAxis>
 
           <YAxis>
-            <Label value="Humidity" angle={-90} position="insideLeft" />
+            <Label value="Humidity (%)" angle={-90} position="insideLeft" />
           </YAxis>
 
           <Line type="monotone" dataKey="value" stroke="#8884d8" />
