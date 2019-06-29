@@ -8,10 +8,17 @@ export const getHumidityRecords = () => {
   return model.find().exec();
 };
 
+export const searchHumidityRecords = ({ createdAfter }) => {
+  return model
+    .find({ createdAt: { $gt: createdAfter } })
+    .sort({ createdAt: 'ascending' })
+    .exec();
+};
+
 export const getLastHumidityRecord = () => {
   return model
     .findOne()
-    .sort({ createdAt: -1 })
+    .sort({ createdAt: 'descending' })
     .limit(1)
     .exec();
 };

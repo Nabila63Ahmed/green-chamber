@@ -8,10 +8,17 @@ export const getTemperatureRecords = () => {
   return model.find().exec();
 };
 
+export const searchTemperatureRecords = ({ createdAfter }) => {
+  return model
+    .find({ createdAt: { $gt: createdAfter } })
+    .sort({ createdAt: 'ascending' })
+    .exec();
+};
+
 export const getLastTemperatureRecord = () => {
   return model
     .findOne()
-    .sort({ createdAt: -1 })
+    .sort({ createdAt: 'descending' })
     .limit(1)
     .exec();
 };
