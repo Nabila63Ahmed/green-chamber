@@ -18,7 +18,7 @@ import {
   insertMotionRecord,
 } from '../services/motion';
 // import { insertEvent, insertEvents, getEvents } from '../services/events';
-import { now, startOfDay } from '../utilities';
+import { now, add, subtract, startOf, toISOString } from '../utilities';
 
 export default ({ amqp, channel, calendar, getEvents, state }) => {
   const api = Router();
@@ -69,7 +69,7 @@ export default ({ amqp, channel, calendar, getEvents, state }) => {
 
   api.get('/temperature/today', async (req, res) => {
     try {
-      const createdAfter = startOfDay(now());
+      const createdAfter = startOf('day')(now());
 
       const retrievedTemperatureRecords = await searchTemperatureRecords({
         createdAfter,
@@ -175,7 +175,7 @@ export default ({ amqp, channel, calendar, getEvents, state }) => {
 
   api.get('/humidity/today', async (req, res) => {
     try {
-      const createdAfter = startOfDay(now());
+      const createdAfter = startOf('day')(now());
 
       const retrievedHumidityRecords = await searchHumidityRecords({
         createdAfter,
@@ -302,7 +302,7 @@ export default ({ amqp, channel, calendar, getEvents, state }) => {
         calendar,
         query: {
           calendarId: 'green.chamber.iot@gmail.com',
-          timeMin: new Date().toISOString(),
+          timeMin: toISOString(now()),
           singleEvents: true,
           orderBy: 'startTime',
         },
@@ -325,23 +325,23 @@ export default ({ amqp, channel, calendar, getEvents, state }) => {
 
   api.get('/events/current', async (req, res) => {
     try {
-      const minTime = new Date();
-      minTime.setTime(minTime.getTime() - 1 * 60 * 1000);
-      const maxTime = new Date();
-      maxTime.setTime(maxTime.getTime() + 1 * 60 * 1000);
+      const minTime = subtract('minutes')(1)(now());
+      const maxTime = add('minutes')(1)(now());
+
       const events = await getEvents({
         calendar,
         query: {
           calendarId: 'green.chamber.iot@gmail.com',
-          timeMin: minTime.toISOString(),
-          timeMax: maxTime.toISOString(),
+          timeMin: toISOString(minTime),
+          timeMax: toISOString(maxTime),
           singleEvents: true,
           orderBy: 'startTime',
           maxResults: 10,
         },
       });
-      if (events.length) {
-        const text = "There's an ongoing event";
+
+      if (events.length > 0) {
+        const text = `Current meeting: ${events[0].summary}`;
         state.lcdDisplayText = text;
 
         await amqp.publish({
@@ -350,6 +350,7 @@ export default ({ amqp, channel, calendar, getEvents, state }) => {
           routingKey: 'actuators.lcd',
           messageJSON: { value: text },
         });
+
         return res.json({
           error: null,
           data: {
@@ -358,6 +359,7 @@ export default ({ amqp, channel, calendar, getEvents, state }) => {
           },
         });
       }
+
       const text = 'No ongoing event';
       state.lcdDisplayText = text;
 
@@ -367,6 +369,7 @@ export default ({ amqp, channel, calendar, getEvents, state }) => {
         routingKey: 'actuators.lcd',
         messageJSON: { value: text },
       });
+
       return res.json({
         error: null,
         data: 'No current event',
@@ -380,7 +383,7 @@ export default ({ amqp, channel, calendar, getEvents, state }) => {
   });
 
   api.get('/lcd', (req, res) => {
-    return res.json({ state });
+    return res.json({ lcdDisplayText: state.lcdDisplayText });
   });
 
   return api;

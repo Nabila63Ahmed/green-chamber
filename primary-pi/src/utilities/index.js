@@ -1,1 +1,1 @@
-export { now, startOfDay } from './time';
+export { now, add, subtract, startOf, toISOString } from './time';
