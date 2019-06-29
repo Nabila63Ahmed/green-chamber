@@ -1,5 +1,5 @@
 import React from 'react';
-import { LineChart, XAxis, YAxis, CartesianGrid, Line, Label } from 'recharts';
+import { LineChart, XAxis, YAxis, Line, Label } from 'recharts';
 import moment from 'moment';
 import { getTemperatures, getHumidities } from './networking';
 
@@ -10,19 +10,25 @@ class App extends React.Component {
   };
 
   async componentDidMount() {
-    const temperatureRecords = await getTemperatures();
+    const [temperatureRecords, humidityRecords] = await Promise.all([
+      getTemperatures(),
+      getHumidities(),
+    ]);
+
     const modifiedTemperatureRecords = temperatureRecords.map(record => ({
       ...record,
       createdAt: moment(record.createdAt).format('LT'),
     }));
-    this.setState({ temperatures: modifiedTemperatureRecords });
 
-    const humidityRecords = await getHumidities();
     const modifiedHumityRecords = humidityRecords.map(record => ({
       ...record,
       createdAt: moment(record.createdAt).format('LT'),
     }));
-    this.setState({ humidities: modifiedHumityRecords });
+
+    this.setState({
+      temperatures: modifiedTemperatureRecords,
+      humidities: modifiedHumityRecords,
+    });
   }
 
   render() {
@@ -44,6 +50,7 @@ class App extends React.Component {
 
           <Line type="monotone" dataKey="value" stroke="#8884d8" />
         </LineChart>
+
         <LineChart
           width={400}
           height={300}
