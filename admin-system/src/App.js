@@ -15,7 +15,7 @@ import {
   toggleLamp,
   toggleFan,
 } from './networking';
-import { attempt } from './utilities';
+import { attempt, truncate } from './utilities';
 
 class App extends React.Component {
   state = {
@@ -221,9 +221,9 @@ class App extends React.Component {
                 elevation="xlarge"
                 animation="fadeIn"
               >
-                <Heading size="small" style={{ textAlign: 'center' }}>
+                <Heading size="small" textAlign="center">
                   {currentEvent ? (
-                    currentEvent.summary
+                    truncate(70)(currentEvent.summary)
                   ) : (
                     <Icons.Close size="large" color="red" />
                   )}
