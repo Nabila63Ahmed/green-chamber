@@ -2,6 +2,7 @@ import React from 'react';
 import { Grommet, Grid, Box, Heading, Button } from 'grommet';
 import * as Icons from 'grommet-icons';
 import { LineChart, XAxis, YAxis, Line, Label, Tooltip } from 'recharts';
+import socket from 'socket.io-client';
 import moment from 'moment';
 import { Spinner } from './components';
 import {
@@ -31,8 +32,8 @@ class App extends React.Component {
 
   async componentDidMount() {
     const [
-      temperatureRecords,
-      humidityRecords,
+      temperatures,
+      humidities,
       currentTemperature,
       currentHumidity,
       currentEvent,
@@ -48,20 +49,26 @@ class App extends React.Component {
       attempt(getFan, false),
     ]);
 
-    const modifiedTemperatureRecords = temperatureRecords.map(record => ({
-      ...record,
-      createdAt: moment(record.createdAt).format('LT'),
-    }));
+    const io = socket('http://localhost:4001');
 
-    const modifiedHumityRecords = humidityRecords.map(record => ({
-      ...record,
-      createdAt: moment(record.createdAt).format('LT'),
-    }));
+    io.on('temperature-changed', newTemperatureReading => {
+      this.setState(state => ({
+        temperatures: state.temperatures.concat(newTemperatureReading),
+        currentTemperature: newTemperatureReading,
+      }));
+    });
+
+    io.on('humidity-changed', newHumidityReading => {
+      this.setState(state => ({
+        humidities: state.humidities.concat(newHumidityReading),
+        currentHumidity: newHumidityReading,
+      }));
+    });
 
     this.setState({
       isLoading: false,
-      temperatures: modifiedTemperatureRecords,
-      humidities: modifiedHumityRecords,
+      temperatures,
+      humidities,
       currentTemperature,
       currentHumidity,
       currentEvent,
@@ -95,6 +102,16 @@ class App extends React.Component {
       isLampOn,
       isFanOn,
     } = this.state;
+
+    const modifiedTemperatures = temperatures.map(record => ({
+      ...record,
+      createdAt: moment(record.createdAt).format('LT'),
+    }));
+
+    const modifiedHumidities = humidities.map(record => ({
+      ...record,
+      createdAt: moment(record.createdAt).format('LT'),
+    }));
 
     return (
       <Grommet style={styles.container} full={true} theme={theme}>
@@ -191,7 +208,7 @@ class App extends React.Component {
                   {currentTemperature ? (
                     `${currentTemperature.value.toFixed(1)}°C`
                   ) : (
-                    <Icons.Close size="large" />
+                    <Icons.Close size="large" color="red" />
                   )}
                 </Heading>
               </Box>
@@ -208,7 +225,7 @@ class App extends React.Component {
                   {currentHumidity ? (
                     `${currentHumidity.value.toFixed(1)}%`
                   ) : (
-                    <Icons.Close size="large" />
+                    <Icons.Close size="large" color="red" />
                   )}
                 </Heading>
               </Box>
@@ -243,7 +260,7 @@ class App extends React.Component {
                   width={window.innerWidth - 10}
                   height={300}
                   margin={{ top: 30, bottom: 30, left: 30, right: 30 }}
-                  data={temperatures}
+                  data={modifiedTemperatures}
                 >
                   <XAxis dataKey="createdAt" tick={{ fill: 'white' }}>
                     <Label
@@ -281,7 +298,7 @@ class App extends React.Component {
                   width={window.innerWidth - 10}
                   height={300}
                   margin={{ top: 30, bottom: 30, left: 30, right: 30 }}
-                  data={humidities}
+                  data={modifiedHumidities}
                 >
                   <XAxis dataKey="createdAt" tick={{ fill: 'white' }}>
                     <Label
