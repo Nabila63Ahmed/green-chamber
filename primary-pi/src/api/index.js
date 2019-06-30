@@ -162,7 +162,7 @@ export default ({ amqp, channel, calendar, getEvents, state }) => {
       return res.json({
         error: null,
         data: {
-          humidityRecords: retrievedHumidityRecord,
+          humidityRecord: retrievedHumidityRecord,
         },
       });
     } catch (error) {
