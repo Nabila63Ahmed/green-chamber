@@ -1,4 +1,6 @@
 import React from 'react';
+import { Grommet, Grid, Box, Heading, Meter, Button } from 'grommet';
+import * as Icons from 'grommet-icons';
 import { LineChart, XAxis, YAxis, Line, Label } from 'recharts';
 import moment from 'moment';
 import {
@@ -98,34 +100,125 @@ class App extends React.Component {
     }
 
     return (
-      <div>
-        <h1>
-          {currentTemperature
-            ? currentTemperature.value
-            : 'Current temperature unavailable'}
-        </h1>
+      <Grommet style={styles.container} full={true} theme={theme}>
+        <Heading color="white" margin="medium">
+          Controls
+        </Heading>
 
-        <h1>
-          {currentHumidity
-            ? currentHumidity.value
-            : 'Current humidity unavailable'}
-        </h1>
+        <Box style={styles.centered} direction="row">
+          <Button
+            style={{ margin: 16, padding: 30 }}
+            plain={false}
+            icon={<Icons.Info size="large" />}
+            color={isLampOn ? 'status-ok' : 'status-critical'}
+            onClick={this._handleToggleLamp}
+          />
 
-        <h1>{currentEvent ? currentEvent.summary : 'No current event'}</h1>
+          <Button
+            style={{ margin: 16, padding: 30 }}
+            plain={false}
+            icon={<Icons.Fan size="large" />}
+            color={isFanOn ? 'status-ok' : 'status-critical'}
+            onClick={this._handleToggleFan}
+          />
+        </Box>
 
-        <button
-          style={{ backgroundColor: isLampOn ? 'green' : 'red' }}
-          onClick={this._handleToggleLamp}
+        <Heading color="white" margin="medium">
+          Readings
+        </Heading>
+
+        <Grid
+          rows={['xsmall', 'small']}
+          columns={['medium', 'medium', 'medium']}
+          fill={true}
+          margin="large"
+          gap="small"
+          justifyContent="center"
+          areas={[
+            { name: 'header-1', start: [0, 0], end: [0, 0] },
+            { name: 'header-2', start: [1, 0], end: [1, 0] },
+            { name: 'header-3', start: [2, 0], end: [2, 0] },
+            { name: 'content-1', start: [0, 1], end: [0, 1] },
+            { name: 'content-2', start: [1, 1], end: [1, 1] },
+            { name: 'content-3', start: [2, 1], end: [2, 1] },
+          ]}
         >
-          Toggle Light
-        </button>
+          <Box
+            style={styles.centered}
+            gridArea="header-1"
+            background="#262680"
+            round="small"
+            elevation="xlarge"
+            animation="fadeIn"
+          >
+            <Heading size="xxsmall">Temperature</Heading>
+          </Box>
 
-        <button
-          style={{ backgroundColor: isFanOn ? 'green' : 'red' }}
-          onClick={this._handleToggleFan}
-        >
-          Toggle Fan
-        </button>
+          <Box
+            style={styles.centered}
+            gridArea="header-2"
+            background="#262680"
+            round="small"
+            elevation="xlarge"
+            animation="fadeIn"
+          >
+            <Heading size="xxsmall">Humidity</Heading>
+          </Box>
+
+          <Box
+            style={styles.centered}
+            gridArea="header-3"
+            background="#262680"
+            round="small"
+            elevation="xlarge"
+            animation="fadeIn"
+          >
+            <Heading size="xxsmall">Event</Heading>
+          </Box>
+
+          <Box
+            style={styles.centered}
+            gridArea="content-1"
+            background="#0000FF"
+            round="small"
+            elevation="xlarge"
+            animation="fadeIn"
+          >
+            <Heading size="small">
+              {currentTemperature
+                ? `${currentTemperature.value.toFixed(1)}°C`
+                : 'Current temperature unavailable'}
+            </Heading>
+          </Box>
+
+          <Box
+            style={styles.centered}
+            gridArea="content-2"
+            background="#0000FF"
+            round="small"
+            elevation="xlarge"
+            animation="fadeIn"
+          >
+            <Heading size="small">
+              {currentHumidity
+                ? `${currentHumidity.value.toFixed(1)}%`
+                : 'Current humidity unavailable'}
+            </Heading>
+          </Box>
+
+          <Box
+            style={styles.centered}
+            gridArea="content-3"
+            background="#0000FF"
+            round="small"
+            elevation="xlarge"
+            animation="fadeIn"
+          >
+            <Heading size="small">
+              {currentEvent ? currentEvent.summary : 'No current event'}
+            </Heading>
+          </Box>
+        </Grid>
 
         <div>
           {temperatures.length > 0 ? (
@@ -176,9 +269,31 @@ class App extends React.Component {
             'Humidities unavailable'
           )}
         </div>
-      </div>
+      </Grommet>
     );
   }
 }
+
+const styles = {
+  container: {
+    backgroundColor: 'black',
+    overflowX: 'hidden',
+  },
+  centered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+};
+
+const theme = {
+  global: {
+    font: {
+      family: 'Roboto',
+      size: '14px',
+      height: '20px',
+    },
+  },
+};
 
 export default App;
