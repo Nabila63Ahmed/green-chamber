@@ -6,11 +6,13 @@ import {
   getHumidities,
   getCurrentTemperature,
   getCurrentHumidity,
+  getCurrentEvent,
   getLamp,
   getFan,
   toggleLamp,
   toggleFan,
 } from './networking';
+import { attempt } from './utilities';
 
 class App extends React.Component {
   state = {
@@ -19,6 +21,7 @@ class App extends React.Component {
     humidities: [],
     currentTemperature: null,
     currentHumidity: null,
+    currentEvent: null,
     isLampOn: false,
     isFanOn: false,
   };
@@ -29,15 +32,17 @@ class App extends React.Component {
       humidityRecords,
       currentTemperature,
       currentHumidity,
+      currentEvent,
       isLampOn,
       isFanOn,
     ] = await Promise.all([
-      getTemperatures(),
-      getHumidities(),
-      getCurrentTemperature(),
-      getCurrentHumidity(),
-      getLamp(),
-      getFan(),
+      attempt(getTemperatures, []),
+      attempt(getHumidities, []),
+      attempt(getCurrentTemperature, null),
+      attempt(getCurrentHumidity, null),
+      attempt(getCurrentEvent, null),
+      attempt(getLamp, false),
+      attempt(getFan, false),
     ]);
 
     const modifiedTemperatureRecords = temperatureRecords.map(record => ({
@@ -56,6 +61,7 @@ class App extends React.Component {
       humidities: modifiedHumityRecords,
       currentTemperature,
       currentHumidity,
+      currentEvent,
       isLampOn,
       isFanOn,
     });
@@ -82,6 +88,7 @@ class App extends React.Component {
       humidities,
       currentTemperature,
       currentHumidity,
+      currentEvent,
       isLampOn,
       isFanOn,
     } = this.state;
@@ -92,9 +99,19 @@ class App extends React.Component {
 
     return (
       <div>
-        <h1>{currentTemperature.value}</h1>
+        <h1>
+          {currentTemperature
+            ? currentTemperature.value
+            : 'Current temperature unavailable'}
+        </h1>
 
-        <h1>{currentHumidity.value}</h1>
+        <h1>
+          {currentHumidity
+            ? currentHumidity.value
+            : 'Current humidity unavailable'}
+        </h1>
+
+        <h1>{currentEvent ? currentEvent.summary : 'No current event'}</h1>
 
         <button
           style={{ backgroundColor: isLampOn ? 'green' : 'red' }}
@@ -110,39 +127,55 @@ class App extends React.Component {
           Toggle Fan
         </button>
 
-        <LineChart
-          width={window.innerWidth - 10}
-          height={300}
-          margin={{ top: 30, bottom: 30, left: 30, right: 30 }}
-          data={temperatures}
-        >
-          <XAxis dataKey="createdAt">
-            <Label value="Time" offset={-10} position="insideBottom" />
-          </XAxis>
+        <div>
+          {temperatures.length > 0 ? (
+            <LineChart
+              width={window.innerWidth - 10}
+              height={300}
+              margin={{ top: 30, bottom: 30, left: 30, right: 30 }}
+              data={temperatures}
+            >
+              <XAxis dataKey="createdAt">
+                <Label value="Time" offset={-10} position="insideBottom" />
+              </XAxis>
 
-          <YAxis>
-            <Label value="Temperature (°C)" angle={-90} position="insideLeft" />
-          </YAxis>
+              <YAxis>
+                <Label
+                  value="Temperature (°C)"
+                  angle={-90}
+                  position="insideLeft"
+                />
+              </YAxis>
 
-          <Line type="monotone" dataKey="value" stroke="#8884d8" />
-        </LineChart>
+              <Line type="monotone" dataKey="value" stroke="#8884d8" />
+            </LineChart>
+          ) : (
+            'Temperatures unavailable'
+          )}
+        </div>
 
-        <LineChart
-          width={window.innerWidth - 10}
-          height={300}
-          margin={{ top: 30, bottom: 30, left: 30, right: 30 }}
-          data={humidities}
-        >
-          <XAxis dataKey="createdAt">
-            <Label value="Time" offset={-10} position="insideBottom" />
-          </XAxis>
+        <div>
+          {humidities.length > 0 ? (
+            <LineChart
+              width={window.innerWidth - 10}
+              height={300}
+              margin={{ top: 30, bottom: 30, left: 30, right: 30 }}
+              data={humidities}
+            >
+              <XAxis dataKey="createdAt">
+                <Label value="Time" offset={-10} position="insideBottom" />
+              </XAxis>
 
-          <YAxis>
-            <Label value="Humidity (%)" angle={-90} position="insideLeft" />
-          </YAxis>
+              <YAxis>
+                <Label value="Humidity (%)" angle={-90} position="insideLeft" />
+              </YAxis>
 
-          <Line type="monotone" dataKey="value" stroke="#8884d8" />
-        </LineChart>
+              <Line type="monotone" dataKey="value" stroke="#8884d8" />
+            </LineChart>
+          ) : (
+            'Humidities unavailable'
+          )}
+        </div>
       </div>
     );
   }

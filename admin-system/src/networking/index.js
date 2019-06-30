@@ -3,13 +3,16 @@ import axios from 'axios';
 export const getTemperatures = async () => {
   const response = await axios.get(
     'http://localhost:4000/api/temperature/today',
+    { validateStatus: () => true },
   );
 
   return response.data.data.temperatureRecords;
 };
 
 export const getHumidities = async () => {
-  const response = await axios.get('http://localhost:4000/api/humidity/today');
+  const response = await axios.get('http://localhost:4000/api/humidity/today', {
+    validateStatus: () => true,
+  });
 
   return response.data.data.humidityRecords;
 };
@@ -17,6 +20,7 @@ export const getHumidities = async () => {
 export const getCurrentTemperature = async () => {
   const response = await axios.get(
     'http://localhost:4000/api/temperature/current',
+    { validateStatus: () => true },
   );
 
   return response.data.data.temperatureRecord;
@@ -25,13 +29,24 @@ export const getCurrentTemperature = async () => {
 export const getCurrentHumidity = async () => {
   const response = await axios.get(
     'http://localhost:4000/api/humidity/current',
+    { validateStatus: () => true },
   );
 
   return response.data.data.humidityRecord;
 };
 
+export const getCurrentEvent = async () => {
+  const response = await axios.get('http://localhost:4000/api/events/current', {
+    validateStatus: () => true,
+  });
+
+  return response.data.data.event;
+};
+
 export const getLamp = async () => {
-  const response = await axios.get('http://localhost:4000/api/lamp');
+  const response = await axios.get('http://localhost:4000/api/lamp', {
+    validateStatus: () => true,
+  });
 
   return response.data.data.isLampOn;
 };
