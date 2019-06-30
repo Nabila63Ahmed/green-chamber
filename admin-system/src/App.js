@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grommet, Grid, Box, Heading, Button } from 'grommet';
 import * as Icons from 'grommet-icons';
-import { LineChart, XAxis, YAxis, Line, Label } from 'recharts';
+import { LineChart, XAxis, YAxis, Line, Label, Tooltip } from 'recharts';
 import moment from 'moment';
 import { Spinner } from './components';
 import {
@@ -221,7 +221,7 @@ class App extends React.Component {
                 elevation="xlarge"
                 animation="fadeIn"
               >
-                <Heading size="small">
+                <Heading size="small" style={{ textAlign: 'center' }}>
                   {currentEvent ? (
                     currentEvent.summary
                   ) : (
@@ -263,6 +263,8 @@ class App extends React.Component {
                     />
                   </YAxis>
 
+                  <Tooltip />
+
                   <Line
                     type="monotone"
                     dataKey="value"
@@ -298,6 +300,8 @@ class App extends React.Component {
                       fill="white"
                     />
                   </YAxis>
+
+                  <Tooltip />
 
                   <Line
                     type="monotone"
