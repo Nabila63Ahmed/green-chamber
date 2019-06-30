@@ -231,9 +231,9 @@ class App extends React.Component {
               </Box>
             </Grid>
 
-            {temperatures.length > 0 && humidities.length > 0 ? (
+            {temperatures.length > 0 || humidities.length > 0 ? (
               <Heading color="white" margin="medium">
-                Today's Plots
+                Today's Readings
               </Heading>
             ) : null}
 
