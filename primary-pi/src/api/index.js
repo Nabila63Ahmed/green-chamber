@@ -17,7 +17,6 @@ import {
   getLastMotionRecord,
   insertMotionRecord,
 } from '../services/motion';
-// import { insertEvent, insertEvents, getEvents } from '../services/events';
 import { now, add, subtract, startOf, toISOString } from '../utilities';
 
 export default ({ amqp, channel, calendar, getEvents, state }) => {
