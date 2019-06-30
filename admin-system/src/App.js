@@ -1,18 +1,33 @@
 import React from 'react';
 import { LineChart, XAxis, YAxis, Line, Label } from 'recharts';
 import moment from 'moment';
-import { getTemperatures, getHumidities } from './networking';
+import {
+  getTemperatures,
+  getHumidities,
+  getCurrentTemperature,
+  getCurrentHumidity,
+} from './networking';
 
 class App extends React.Component {
   state = {
+    isLoading: true,
     temperatures: [],
     humidities: [],
+    currentTemperature: null,
+    currentHumidity: null,
   };
 
   async componentDidMount() {
-    const [temperatureRecords, humidityRecords] = await Promise.all([
+    const [
+      temperatureRecords,
+      humidityRecords,
+      currentTemperature,
+      currentHumidity,
+    ] = await Promise.all([
       getTemperatures(),
       getHumidities(),
+      getCurrentTemperature(),
+      getCurrentHumidity(),
     ]);
 
     const modifiedTemperatureRecords = temperatureRecords.map(record => ({
@@ -26,19 +41,38 @@ class App extends React.Component {
     }));
 
     this.setState({
+      isLoading: false,
       temperatures: modifiedTemperatureRecords,
       humidities: modifiedHumityRecords,
+      currentTemperature,
+      currentHumidity,
     });
   }
 
   render() {
+    const {
+      isLoading,
+      temperatures,
+      humidities,
+      currentTemperature,
+      currentHumidity,
+    } = this.state;
+
+    if (isLoading) {
+      return <h3>Loading...</h3>;
+    }
+
     return (
       <div>
+        <h1>{currentTemperature.value}</h1>
+
+        <h1>{currentHumidity.value}</h1>
+
         <LineChart
           width={window.innerWidth - 10}
           height={300}
           margin={{ top: 30, bottom: 30, left: 30, right: 30 }}
-          data={this.state.temperatures}
+          data={temperatures}
         >
           <XAxis dataKey="createdAt">
             <Label value="Time" offset={-10} position="insideBottom" />
@@ -55,7 +89,7 @@ class App extends React.Component {
           width={window.innerWidth - 10}
           height={300}
           margin={{ top: 30, bottom: 30, left: 30, right: 30 }}
-          data={this.state.humidities}
+          data={humidities}
         >
           <XAxis dataKey="createdAt">
             <Label value="Time" offset={-10} position="insideBottom" />
