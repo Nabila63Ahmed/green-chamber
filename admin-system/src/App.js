@@ -188,9 +188,11 @@ class App extends React.Component {
                 animation="fadeIn"
               >
                 <Heading size="small">
-                  {currentTemperature
-                    ? `${currentTemperature.value.toFixed(1)}°C`
-                    : 'Current temperature unavailable'}
+                  {currentTemperature ? (
+                    `${currentTemperature.value.toFixed(1)}°C`
+                  ) : (
+                    <Icons.Close size="large" />
+                  )}
                 </Heading>
               </Box>
 
@@ -203,9 +205,11 @@ class App extends React.Component {
                 animation="fadeIn"
               >
                 <Heading size="small">
-                  {currentHumidity
-                    ? `${currentHumidity.value.toFixed(1)}%`
-                    : 'Current humidity unavailable'}
+                  {currentHumidity ? (
+                    `${currentHumidity.value.toFixed(1)}%`
+                  ) : (
+                    <Icons.Close size="large" />
+                  )}
                 </Heading>
               </Box>
 
@@ -218,16 +222,22 @@ class App extends React.Component {
                 animation="fadeIn"
               >
                 <Heading size="small">
-                  {currentEvent ? currentEvent.summary : 'No current event'}
+                  {currentEvent ? (
+                    currentEvent.summary
+                  ) : (
+                    <Icons.Close size="large" color="red" />
+                  )}
                 </Heading>
               </Box>
             </Grid>
 
-            <Heading color="white" margin="medium">
-              Today's Plots
-            </Heading>
+            {temperatures.length > 0 && humidities.length > 0 ? (
+              <Heading color="white" margin="medium">
+                Today's Plots
+              </Heading>
+            ) : null}
 
-            <div>
+            <Box>
               {temperatures.length > 0 ? (
                 <LineChart
                   width={window.innerWidth - 10}
@@ -260,11 +270,10 @@ class App extends React.Component {
                     dot={false}
                   />
                 </LineChart>
-              ) : (
-                'Temperatures unavailable'
-              )}
-            </div>
-            <div>
+              ) : null}
+            </Box>
+
+            <Box>
               {humidities.length > 0 ? (
                 <LineChart
                   width={window.innerWidth - 10}
@@ -297,10 +306,8 @@ class App extends React.Component {
                     dot={false}
                   />
                 </LineChart>
-              ) : (
-                'Humidities unavailable'
-              )}
-            </div>
+              ) : null}
+            </Box>
           </Box>
         )}
       </Grommet>
