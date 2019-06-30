@@ -17,9 +17,10 @@ import {
   getLastMotionRecord,
   insertMotionRecord,
 } from '../services/motion';
+import { getEvents } from '../datasources/google-calendar';
 import { now, add, subtract, startOf, toISOString } from '../utilities';
 
-export default ({ amqp, channel, calendar, getEvents, state }) => {
+export default ({ amqp, channel, calendar, state }) => {
   const api = Router();
 
   api.get('/ping', (req, res) => {

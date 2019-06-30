@@ -4,13 +4,13 @@ import bodyParser from 'body-parser';
 import validator from 'validator';
 import * as _ from 'lodash';
 import mongoose from 'mongoose';
+import socket from 'socket.io';
 import * as amqp from './amqp';
 import api from './api';
 import * as logic from './logic';
 import {
   initializeJWT,
   initializeCalendar,
-  getEvents,
   key,
 } from './datasources/google-calendar';
 
@@ -113,14 +113,14 @@ import {
   //   channel,
   //   exchangeName: exchangeName1,
   //   routingKey: routingKey1,
-  //   messageJSON: { value: 25.4, createdAt: 647284 },
+  //   messageJSON: { value: Math.random() * 25 + 15, createdAt: Date.now() },
   // });
 
   // await amqp.publish({
   //   channel,
   //   exchangeName: exchangeName1,
   //   routingKey: routingKey2,
-  //   messageJSON: { value: 80, createdAt: 789800 },
+  //   messageJSON: { value: Math.random() * 25 + 15, createdAt: Date.now() },
   // });
 
   const handleMessageReceived = async message => {
@@ -129,18 +129,25 @@ import {
         _.isNil(message.content) ||
         !validator.isJSON(message.content.toString())
       ) {
-        console.log('Error > Incorrect message content type');
+        console.log('ERROR > Invalid Message Content');
         return;
       }
-      // TODO: Implement conditional logic
 
       const messageJSON = JSON.parse(message.content.toString());
-      if (!_.isNil(messageJSON.value) && !_.isNil(messageJSON.createdAt)) {
-        await logic.storeSensorData({
-          routingKey: message.fields.routingKey,
-          message: messageJSON,
-        });
+
+      if (_.isNil(messageJSON.value) || _.isNil(messageJSON.createdAt)) {
+        console.log('ERROR > Invalid Message Content');
+        return;
       }
+
+      // TODO: Implement conditional logic
+
+      await logic.handleMessageReceived({
+        routingKey: message.fields.routingKey,
+        message: messageJSON,
+        io,
+      });
+
       console.log('MESSAGE >', messageJSON);
       console.log('ROUTING KEY >', message.fields.routingKey);
     }
@@ -192,16 +199,23 @@ import {
   mongoose.connect(mongodbConnectionString, { useNewUrlParser: true });
 
   const app = express();
-  const port = 4000;
+  const httpPort = 4000;
 
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(cors());
 
-  app.use('/api/', api({ amqp, channel, calendar, getEvents, state }));
+  app.use('/api/', api({ amqp, channel, calendar, state }));
 
-  app.listen(port, () => {
+  app.listen(httpPort, () => {
     // eslint-disable-next-line no-console
-    console.log(`Server listening on port ${port}...`);
+    console.log(`HTTP server listening on port ${httpPort}...`);
   });
+
+  const io = socket();
+  const socketsPort = 4001;
+
+  io.listen(socketsPort);
+  // eslint-disable-next-line no-console
+  console.log(`Sockets server listening on port ${socketsPort}...`);
 })();
