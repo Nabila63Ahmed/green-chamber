@@ -7,7 +7,9 @@ import {
   getCurrentTemperature,
   getCurrentHumidity,
   getLamp,
+  getFan,
   toggleLamp,
+  toggleFan,
 } from './networking';
 
 class App extends React.Component {
@@ -18,6 +20,7 @@ class App extends React.Component {
     currentTemperature: null,
     currentHumidity: null,
     isLampOn: false,
+    isFanOn: false,
   };
 
   async componentDidMount() {
@@ -27,12 +30,14 @@ class App extends React.Component {
       currentTemperature,
       currentHumidity,
       isLampOn,
+      isFanOn,
     ] = await Promise.all([
       getTemperatures(),
       getHumidities(),
       getCurrentTemperature(),
       getCurrentHumidity(),
       getLamp(),
+      getFan(),
     ]);
 
     const modifiedTemperatureRecords = temperatureRecords.map(record => ({
@@ -52,6 +57,7 @@ class App extends React.Component {
       currentTemperature,
       currentHumidity,
       isLampOn,
+      isFanOn,
     });
   }
 
@@ -62,6 +68,13 @@ class App extends React.Component {
     this.setState({ isLampOn: newValue });
   };
 
+  _handleToggleFan = async () => {
+    const { isFanOn } = this.state;
+
+    const newValue = await toggleFan(!isFanOn);
+    this.setState({ isFanOn: newValue });
+  };
+
   render() {
     const {
       isLoading,
@@ -70,6 +83,7 @@ class App extends React.Component {
       currentTemperature,
       currentHumidity,
       isLampOn,
+      isFanOn,
     } = this.state;
 
     if (isLoading) {
@@ -89,7 +103,12 @@ class App extends React.Component {
           Toggle Light
         </button>
 
-        <button onClick={() => {}}>Fan On/Off</button>
+        <button
+          style={{ backgroundColor: isFanOn ? 'green' : 'red' }}
+          onClick={this._handleToggleFan}
+        >
+          Toggle Fan
+        </button>
 
         <LineChart
           width={window.innerWidth - 10}

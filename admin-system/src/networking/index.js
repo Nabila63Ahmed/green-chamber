@@ -43,3 +43,17 @@ export const toggleLamp = async value => {
 
   return response.data.data.value;
 };
+
+export const getFan = async () => {
+  const response = await axios.get('http://localhost:4000/api/fan');
+
+  return response.data.data.isFanOn;
+};
+
+export const toggleFan = async value => {
+  const response = await axios.post('http://localhost:4000/api/fan', {
+    value,
+  });
+
+  return response.data.data.value;
+};
