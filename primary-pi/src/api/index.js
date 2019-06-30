@@ -109,7 +109,12 @@ export default ({ amqp, channel, calendar, getEvents, state }) => {
   });
 
   api.get('/fan', (req, res) => {
-    return res.json({ isFanOn: state.isFanOn });
+    return res.json({
+      error: null,
+      data: {
+        isFanOn: state.isFanOn,
+      },
+    });
   });
 
   api.post('/fan', async (req, res) => {
@@ -127,7 +132,7 @@ export default ({ amqp, channel, calendar, getEvents, state }) => {
 
       return res.json({
         error: null,
-        data: value,
+        data: { value },
       });
     }
     return res.status(500).json({
@@ -270,7 +275,10 @@ export default ({ amqp, channel, calendar, getEvents, state }) => {
   });
 
   api.get('/lamp', (req, res) => {
-    return res.json({ isLampOn: state.isLampOn });
+    return res.json({
+      error: null,
+      data: { isLampOn: state.isLampOn },
+    });
   });
 
   api.post('/lamp', async (req, res) => {
@@ -287,7 +295,7 @@ export default ({ amqp, channel, calendar, getEvents, state }) => {
 
       return res.json({
         error: null,
-        data: value,
+        data: { value },
       });
     }
     return res.status(500).json({
@@ -370,9 +378,9 @@ export default ({ amqp, channel, calendar, getEvents, state }) => {
         messageJSON: { value: text },
       });
 
-      return res.json({
-        error: null,
-        data: 'No current event',
+      return res.status(404).json({
+        error: 'Not Found',
+        data: null,
       });
     } catch (error) {
       return res.status(500).json({
@@ -383,7 +391,10 @@ export default ({ amqp, channel, calendar, getEvents, state }) => {
   });
 
   api.get('/lcd', (req, res) => {
-    return res.json({ lcdDisplayText: state.lcdDisplayText });
+    return res.json({
+      error: null,
+      data: { lcdDisplayText: state.lcdDisplayText },
+    });
   });
 
   return api;
