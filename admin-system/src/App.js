@@ -112,7 +112,7 @@ class App extends React.Component {
               <Button
                 style={{ margin: 16, padding: 30 }}
                 plain={false}
-                icon={<Icons.Info size="large" />}
+                icon={<Icons.Info size="large" color="white" />}
                 color={isLampOn ? 'status-ok' : 'status-critical'}
                 onClick={this._handleToggleLamp}
               />
@@ -120,14 +120,14 @@ class App extends React.Component {
               <Button
                 style={{ margin: 16, padding: 30 }}
                 plain={false}
-                icon={<Icons.Fan size="large" />}
+                icon={<Icons.Fan size="large" color="white" />}
                 color={isFanOn ? 'status-ok' : 'status-critical'}
                 onClick={this._handleToggleFan}
               />
             </Box>
 
             <Heading color="white" margin="medium">
-              Readings
+              Live Readings
             </Heading>
 
             <Grid
@@ -222,6 +222,11 @@ class App extends React.Component {
                 </Heading>
               </Box>
             </Grid>
+
+            <Heading color="white" margin="medium">
+              Today's Plots
+            </Heading>
+
             <div>
               {temperatures.length > 0 ? (
                 <LineChart
@@ -230,19 +235,30 @@ class App extends React.Component {
                   margin={{ top: 30, bottom: 30, left: 30, right: 30 }}
                   data={temperatures}
                 >
-                  <XAxis dataKey="createdAt">
-                    <Label value="Time" offset={-10} position="insideBottom" />
+                  <XAxis dataKey="createdAt" tick={{ fill: 'white' }}>
+                    <Label
+                      value="Time"
+                      offset={-10}
+                      position="insideBottom"
+                      fill="white"
+                    />
                   </XAxis>
 
-                  <YAxis>
+                  <YAxis dataKey="value" tick={{ fill: 'white' }}>
                     <Label
                       value="Temperature (°C)"
                       angle={-90}
                       position="insideLeft"
+                      fill="white"
                     />
                   </YAxis>
 
-                  <Line type="monotone" dataKey="value" stroke="#8884d8" />
+                  <Line
+                    type="monotone"
+                    dataKey="value"
+                    stroke="#0000FF"
+                    dot={false}
+                  />
                 </LineChart>
               ) : (
                 'Temperatures unavailable'
@@ -256,19 +272,30 @@ class App extends React.Component {
                   margin={{ top: 30, bottom: 30, left: 30, right: 30 }}
                   data={humidities}
                 >
-                  <XAxis dataKey="createdAt">
-                    <Label value="Time" offset={-10} position="insideBottom" />
+                  <XAxis dataKey="createdAt" tick={{ fill: 'white' }}>
+                    <Label
+                      value="Time"
+                      offset={-10}
+                      position="insideBottom"
+                      fill="white"
+                    />
                   </XAxis>
 
-                  <YAxis>
+                  <YAxis dataKey="value" tick={{ fill: 'white' }}>
                     <Label
                       value="Humidity (%)"
                       angle={-90}
                       position="insideLeft"
+                      fill="white"
                     />
                   </YAxis>
 
-                  <Line type="monotone" dataKey="value" stroke="#8884d8" />
+                  <Line
+                    type="monotone"
+                    dataKey="value"
+                    stroke="#0000FF"
+                    dot={false}
+                  />
                 </LineChart>
               ) : (
                 'Humidities unavailable'
