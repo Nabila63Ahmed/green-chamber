@@ -348,7 +348,9 @@ export default ({ amqp, channel, calendar, getEvents, state }) => {
       });
 
       if (events.length > 0) {
-        const text = `Current meeting: ${events[0].summary}`;
+        const [firstEvent] = events;
+
+        const text = `Current meeting: ${firstEvent.summary}`;
         state.lcdDisplayText = text;
 
         await amqp.publish({
@@ -361,8 +363,7 @@ export default ({ amqp, channel, calendar, getEvents, state }) => {
         return res.json({
           error: null,
           data: {
-            count: events.length,
-            events,
+            event: firstEvent,
           },
         });
       }
