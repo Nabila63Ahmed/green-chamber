@@ -36,6 +36,13 @@ import {
 
   // console.log('EVENTS >', events);
 
+  const io = socket();
+  const socketsPort = 4001;
+
+  io.listen(socketsPort);
+  // eslint-disable-next-line no-console
+  console.log(`Sockets server listening on port ${socketsPort}...`);
+
   const connectionUri = 'amqp://localhost';
   const exchangeName1 = 'sensors-exchange';
   const exchangeName2 = 'actuators-exchange';
@@ -153,22 +160,24 @@ import {
     }
   };
 
-  amqp.consume({
-    channel,
-    queueName: queueName1,
-    onMessageReceived: handleMessageReceived,
-  });
+  io.on('connection', () => {
+    amqp.consume({
+      channel,
+      queueName: queueName1,
+      onMessageReceived: handleMessageReceived,
+    });
 
-  amqp.consume({
-    channel,
-    queueName: queueName2,
-    onMessageReceived: handleMessageReceived,
-  });
+    amqp.consume({
+      channel,
+      queueName: queueName2,
+      onMessageReceived: handleMessageReceived,
+    });
 
-  amqp.consume({
-    channel,
-    queueName: queueName3,
-    onMessageReceived: handleMessageReceived,
+    amqp.consume({
+      channel,
+      queueName: queueName3,
+      onMessageReceived: handleMessageReceived,
+    });
   });
 
   // amqp.consume({
@@ -211,11 +220,4 @@ import {
     // eslint-disable-next-line no-console
     console.log(`HTTP server listening on port ${httpPort}...`);
   });
-
-  const io = socket();
-  const socketsPort = 4001;
-
-  io.listen(socketsPort);
-  // eslint-disable-next-line no-console
-  console.log(`Sockets server listening on port ${socketsPort}...`);
 })();
