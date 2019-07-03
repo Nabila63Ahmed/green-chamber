@@ -148,7 +148,11 @@ import {
       }
 
       // TODO: Implement conditional logic
-      //    @TODO: Lamp or fan (on/off) --> io.sockets.emit( ) -when needed (Nabila)
+
+      //    @TODO: Lamp or fan (on/off) -when needed (Nabila)
+      //    --> io.sockets.emit('lamp-state-changed', true/false )
+      //    OR
+      //    --> io.sockets.emit('fan-state-changed', true/false)
 
       await logic.handleMessageReceived({
         routingKey: message.fields.routingKey,
