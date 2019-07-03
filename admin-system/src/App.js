@@ -65,6 +65,14 @@ class App extends React.Component {
       }));
     });
 
+    io.on('lamp-state-changed', newLampState => {
+      this.setState(state => ({ isLampOn: newLampState }));
+    });
+
+    io.on('fan-state-changed', newFanState => {
+      this.setState(state => ({ isFanOn: newFanState }));
+    });
+
     this.setState({
       isLoading: false,
       temperatures,
