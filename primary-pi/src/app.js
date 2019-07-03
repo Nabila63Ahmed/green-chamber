@@ -148,6 +148,7 @@ import {
       }
 
       // TODO: Implement conditional logic
+      //    @TODO: Lamp or fan (on/off) --> io.sockets.emit( ) -when needed (Nabila)
 
       await logic.handleMessageReceived({
         routingKey: message.fields.routingKey,
