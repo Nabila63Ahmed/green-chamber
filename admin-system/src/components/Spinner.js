@@ -2,9 +2,7 @@ import React from 'react';
 import { Spring } from 'react-spring/renderprops';
 import { Meter } from 'grommet';
 
-/**
- * Loading spinner
- */
+/* Loading spinner */
 const Spinner = () => {
   return (
     <Spring from={{ value: 0 }} to={{ value: 100 }}>
