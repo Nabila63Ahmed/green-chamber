@@ -31,9 +31,7 @@ class App extends React.Component {
   };
 
   async componentDidMount() {
-    /**
-     * Fetch the current data from the server
-     */
+    /* Fetch the latest data from the server */
     const [
       temperatures,
       humidities,
@@ -52,14 +50,10 @@ class App extends React.Component {
       attempt(getFan, false),
     ]);
 
-    /**
-     * Connect to the server socket
-     */
+    /* Connect to the server socket */
     const io = socket('http://localhost:4001');
 
-    /**
-     * Reflect recent temperature change in App state
-     */
+    /* Reflect real-time temperature change in local state */
     io.on('temperature-changed', newTemperatureReading => {
       this.setState(state => ({
         temperatures: state.temperatures.concat(newTemperatureReading),
@@ -67,9 +61,7 @@ class App extends React.Component {
       }));
     });
 
-    /**
-     * Reflect recent humidity change in App state
-     */
+    /* Reflect real-time humidity change in local state */
     io.on('humidity-changed', newHumidityReading => {
       this.setState(state => ({
         humidities: state.humidities.concat(newHumidityReading),
@@ -77,23 +69,17 @@ class App extends React.Component {
       }));
     });
 
-    /**
-     * Reflect recent lamp state in App state
-     */
+    /* Reflect real-time lamp state in local state */
     io.on('lamp-state-changed', newLampState => {
       this.setState(state => ({ isLampOn: newLampState }));
     });
 
-    /**
-     * Reflect recent fan state in App state
-     */
+    /* Reflect real-time fan state in local state */
     io.on('fan-state-changed', newFanState => {
       this.setState(state => ({ isFanOn: newFanState }));
     });
 
-    /**
-     * Update App state
-     */
+    /* Update local state */
     this.setState({
       isLoading: false,
       temperatures,
@@ -106,9 +92,7 @@ class App extends React.Component {
     });
   }
 
-  /**
-   * Toggle the current lamp state in the system
-   */
+  /* Toggle the current lamp state in the system */
   _handleToggleLamp = async () => {
     const { isLampOn } = this.state;
 
@@ -116,9 +100,7 @@ class App extends React.Component {
     this.setState({ isLampOn: newValue });
   };
 
-  /**
-   * Toggle the current fan state in the system
-   */
+  /* Toggle the current fan state in the system */
   _handleToggleFan = async () => {
     const { isFanOn } = this.state;
 
@@ -151,16 +133,12 @@ class App extends React.Component {
     return (
       <Grommet style={styles.container} full={true} theme={theme}>
         {isLoading ? (
-          /**
-           * Loading
-           */
+          /* Loading data */
           <Box style={styles.centered} fill={true}>
             <Spinner />
           </Box>
         ) : (
-          /**
-           * Loaded Admin System
-           */
+          /* Data loaded */
           <Box>
             <Heading color="white" margin="medium">
               Controls
