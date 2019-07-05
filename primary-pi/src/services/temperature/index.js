@@ -1,16 +1,16 @@
 import mongoose from 'mongoose';
 
-/* Create and insert a temperature record */
+/* Insert a temperature record */
 export const insertTemperatureRecord = ({ value, createdAt }) => {
   return model.create({ value, createdAt });
 };
 
-/* Get all temperature records in the database */
+/* Get all temperature records */
 export const getTemperatureRecords = () => {
   return model.find().exec();
 };
 
-/* Get all temperature records in the database after a timestamp */
+/* Search temperature records */
 export const searchTemperatureRecords = ({ createdAfter }) => {
   return model
     .find({ createdAt: { $gt: createdAfter } })
@@ -18,7 +18,7 @@ export const searchTemperatureRecords = ({ createdAfter }) => {
     .exec();
 };
 
-/* Get latest temperature record from the database */
+/* Get latest temperature record */
 export const getLastTemperatureRecord = () => {
   return model
     .findOne()

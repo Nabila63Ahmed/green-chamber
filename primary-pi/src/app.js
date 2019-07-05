@@ -15,13 +15,13 @@ import {
 } from './datasources/google-calendar';
 
 (async () => {
-  /* Google API JWT authentication */
+  /* Authenticate with Google API */
   const jwt = initializeJWT({
     key,
     scopes: 'https://www.googleapis.com/auth/calendar.readonly',
   });
 
-  /* Google calendar initialization */
+  /* Initialize Google Calendar */
   const calendar = initializeCalendar({
     jwt,
   });
@@ -39,7 +39,7 @@ import {
 
   // console.log('EVENTS >', events);
 
-  /* Socket initialization */
+  /* Initialize socket */
   const io = socket();
   const socketsPort = 4001;
 
@@ -179,7 +179,7 @@ import {
   };
 
   io.on('connection', () => {
-    /* Consume messages on the sensors queues */
+    /* Consume messages on the sensor's queues */
     amqp.consume({
       channel,
       queueName: queueName1,
@@ -217,18 +217,18 @@ import {
   //   onMessageReceived: handleMessageReceived,
   // });
 
-  /* Initialize server state */
+  /* Initialize server volatile state */
   const state = {
     isFanOn: false,
     isLampOn: false,
     lcdDisplayText: '',
   };
 
-  /* Mongodb connection */
+  /* Connect to MongoDB */
   const mongodbConnectionString = 'mongodb://127.0.0.1/green-chamber';
   mongoose.connect(mongodbConnectionString, { useNewUrlParser: true });
 
-  /* Initialize and run the server */
+  /* Initialize and run server */
   const app = express();
   const httpPort = 4000;
 

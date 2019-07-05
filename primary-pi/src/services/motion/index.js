@@ -1,16 +1,16 @@
 import mongoose from 'mongoose';
 
-/* Create and insert a motion record */
+/* Insert a motion record */
 export const insertMotionRecord = ({ value, createdAt }) => {
   return model.create({ value, createdAt });
 };
 
-/* Get all motion records in the database */
+/* Get all motion records */
 export const getMotionRecords = () => {
   return model.find().exec();
 };
 
-/* Get latest motion record from the database */
+/* Get latest motion record */
 export const getLastMotionRecord = () => {
   return model
     .findOne()

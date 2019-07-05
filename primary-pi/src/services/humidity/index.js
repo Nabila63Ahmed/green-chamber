@@ -1,16 +1,16 @@
 import mongoose from 'mongoose';
 
-/* Create and insert a humidity record */
+/* Insert a humidity record */
 export const insertHumidityRecord = ({ value, createdAt }) => {
   return model.create({ value, createdAt });
 };
 
-/* Get all humidity records in the database */
+/* Get all humidity records */
 export const getHumidityRecords = () => {
   return model.find().exec();
 };
 
-/* Get all humidity records in the database after a timestamp */
+/* Search humidity records */
 export const searchHumidityRecords = ({ createdAfter }) => {
   return model
     .find({ createdAt: { $gt: createdAfter } })

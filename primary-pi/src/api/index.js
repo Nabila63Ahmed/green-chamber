@@ -20,7 +20,7 @@ import {
 import { getEvents } from '../datasources/google-calendar';
 import { now, add, subtract, startOf, toISOString } from '../utilities';
 
-/* Definition of api endpoint of the server */
+/* Define API endpoints */
 export default ({ amqp, channel, calendar, state }) => {
   const api = Router();
 
@@ -296,13 +296,13 @@ export default ({ amqp, channel, calendar, state }) => {
     });
   });
 
-  /* Update the state of the lamp in the local state
-   *  and publish the update on RMQ */
+  /* Update the state of the lamp from local state */
   api.post('/lamp', async (req, res) => {
     if (!_.isNil(req.body.value) && _.isBoolean(req.body.value)) {
       const value = req.body.value;
 
       state.isLampOn = value;
+
       await amqp.publish({
         channel,
         exchangeName: 'actuators-exchange',
@@ -349,7 +349,7 @@ export default ({ amqp, channel, calendar, state }) => {
     }
   });
 
-  /* Get ongoing event and update the lcd display in state and screen */
+  /* Get ongoing event and update the LCD display text in local state */
   api.get('/events/current', async (req, res) => {
     try {
       const minTime = subtract('minutes')(1)(now());

@@ -1,11 +1,11 @@
 import amqp from 'amqplib';
 
-/* Consume and return message on queue 'queueName' */
+/* Consume message on a specified queue */
 export const consume = ({ channel, queueName, onMessageReceived }) => {
   return channel.consume(queueName, onMessageReceived);
 };
 
-/* Publish a message on intended queue via the routingKey */
+/* Publish a message with a specified routing key */
 export const publish = ({ channel, exchangeName, routingKey, messageJSON }) => {
   return channel.publish(
     exchangeName,
@@ -24,22 +24,22 @@ export const bindQueueToExchange = ({
   return channel.bindQueue(queueName, exchangeName, routingKey);
 };
 
-/* Exchange creation */
+/* Create exchange if nonexistent */
 export const assertExchange = ({ channel, exchangeName }) => {
   return channel.assertExchange(exchangeName, 'topic');
 };
 
-/* Queue creation */
+/* Create queue if nonexistent */
 export const assertQueue = ({ channel, queueName }) => {
   return channel.assertQueue(queueName, { exclusive: true });
 };
 
-/* Channel creation */
+/* Create channel */
 export const createChannel = ({ connection }) => {
   return connection.createChannel();
 };
 
-/* Connection creation */
+/* Create connection */
 export const createConnection = ({ connectionUri }) => {
   return amqp.connect(connectionUri);
 };
