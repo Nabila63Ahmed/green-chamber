@@ -20,6 +20,7 @@ import {
 import { getEvents } from '../datasources/google-calendar';
 import { now, add, subtract, startOf, toISOString } from '../utilities';
 
+/* Definition of api endpoint of the server */
 export default ({ amqp, channel, calendar, state }) => {
   const api = Router();
 
@@ -30,6 +31,7 @@ export default ({ amqp, channel, calendar, state }) => {
     });
   });
 
+  /* Get all temperature records */
   api.get('/temperature', async (req, res) => {
     try {
       const retrievedTemperatureRecords = await getTemperatureRecords();
@@ -49,6 +51,7 @@ export default ({ amqp, channel, calendar, state }) => {
     }
   });
 
+  /* Get latest temperature record */
   api.get('/temperature/current', async (req, res) => {
     try {
       const retrievedTemperatureRecord = await getLastTemperatureRecord();
@@ -67,6 +70,7 @@ export default ({ amqp, channel, calendar, state }) => {
     }
   });
 
+  /* Get all today's temperature records */
   api.get('/temperature/today', async (req, res) => {
     try {
       const createdAfter = startOf('day')(now());
@@ -90,6 +94,7 @@ export default ({ amqp, channel, calendar, state }) => {
     }
   });
 
+  /* Insert a temperature record */
   api.post('/temperature', async (req, res) => {
     try {
       const createdTemperatureRecord = await insertTemperatureRecord(req.body);
@@ -108,6 +113,7 @@ export default ({ amqp, channel, calendar, state }) => {
     }
   });
 
+  /* Get the state of the fan from local state */
   api.get('/fan', (req, res) => {
     return res.json({
       error: null,
@@ -117,6 +123,7 @@ export default ({ amqp, channel, calendar, state }) => {
     });
   });
 
+  /* Update the state of the fan in the local state, and publish the update on RMQ */
   api.post('/fan', async (req, res) => {
     if (!_.isNil(req.body.value) && _.isBoolean(req.body.value)) {
       const value = req.body.value;
@@ -141,6 +148,7 @@ export default ({ amqp, channel, calendar, state }) => {
     });
   });
 
+  /* Get all humidity records */
   api.get('/humidity', async (req, res) => {
     try {
       const retrievedHumidityRecords = await getHumidityRecords();
@@ -160,6 +168,7 @@ export default ({ amqp, channel, calendar, state }) => {
     }
   });
 
+  /* Get latest humidity record */
   api.get('/humidity/current', async (req, res) => {
     try {
       const retrievedHumidityRecord = await getLastHumidityRecord();
@@ -178,6 +187,7 @@ export default ({ amqp, channel, calendar, state }) => {
     }
   });
 
+  /* Get all today's humidity records */
   api.get('/humidity/today', async (req, res) => {
     try {
       const createdAfter = startOf('day')(now());
@@ -201,6 +211,7 @@ export default ({ amqp, channel, calendar, state }) => {
     }
   });
 
+  /* Insert a humidity record */
   api.post('/humidity', async (req, res) => {
     try {
       const createdHumidityRecord = await insertHumidityRecord(req.body);
@@ -219,6 +230,7 @@ export default ({ amqp, channel, calendar, state }) => {
     }
   });
 
+  /* Get all motion records */
   api.get('/motion', async (req, res) => {
     try {
       const retrievedMotionRecords = await getMotionRecords();
@@ -238,6 +250,7 @@ export default ({ amqp, channel, calendar, state }) => {
     }
   });
 
+  /* Get latest motion record */
   api.get('/motion/current', async (req, res) => {
     try {
       const retrievedMotionRecord = await getLastMotionRecord();
@@ -256,6 +269,7 @@ export default ({ amqp, channel, calendar, state }) => {
     }
   });
 
+  /* Insert a motion record */
   api.post('/motion', async (req, res) => {
     try {
       const createdMotionRecord = await insertMotionRecord(req.body);
@@ -274,6 +288,7 @@ export default ({ amqp, channel, calendar, state }) => {
     }
   });
 
+  /* Get the state of the lamp from local state */
   api.get('/lamp', (req, res) => {
     return res.json({
       error: null,
@@ -281,6 +296,8 @@ export default ({ amqp, channel, calendar, state }) => {
     });
   });
 
+  /* Update the state of the lamp in the local state
+   *  and publish the update on RMQ */
   api.post('/lamp', async (req, res) => {
     if (!_.isNil(req.body.value) && _.isBoolean(req.body.value)) {
       const value = req.body.value;
@@ -304,6 +321,7 @@ export default ({ amqp, channel, calendar, state }) => {
     });
   });
 
+  /* Get all events starting now */
   api.get('/events', async (req, res) => {
     try {
       const events = await getEvents({
@@ -331,6 +349,7 @@ export default ({ amqp, channel, calendar, state }) => {
     }
   });
 
+  /* Get ongoing event and update the lcd display in state and screen */
   api.get('/events/current', async (req, res) => {
     try {
       const minTime = subtract('minutes')(1)(now());
@@ -391,6 +410,7 @@ export default ({ amqp, channel, calendar, state }) => {
     }
   });
 
+  /* Get the state of the lcd from local state */
   api.get('/lcd', (req, res) => {
     return res.json({
       error: null,

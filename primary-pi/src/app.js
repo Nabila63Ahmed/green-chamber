@@ -15,15 +15,18 @@ import {
 } from './datasources/google-calendar';
 
 (async () => {
+  /* Google API JWT authentication */
   const jwt = initializeJWT({
     key,
     scopes: 'https://www.googleapis.com/auth/calendar.readonly',
   });
 
+  /* Google calendar initialization */
   const calendar = initializeCalendar({
     jwt,
   });
 
+  /* Get all events starting now */
   // const events = await getEvents({
   //   calendar,
   //   query: {
@@ -36,6 +39,7 @@ import {
 
   // console.log('EVENTS >', events);
 
+  /* Socket initialization */
   const io = socket();
   const socketsPort = 4001;
 
@@ -50,23 +54,26 @@ import {
   const queueName1 = 'sensors.temperature.queue';
   const queueName2 = 'sensors.humidity.queue';
   const queueName3 = 'sensors.motion.queue';
-  const queueName4 = 'actuators.plugwise.lamp.queue';
-  const queueName5 = 'actuators.plugwise.fan.queue';
-  const queueName6 = 'actuators.lcd.queue';
+  // const queueName4 = 'actuators.plugwise.lamp.queue';
+  // const queueName5 = 'actuators.plugwise.fan.queue';
+  // const queueName6 = 'actuators.lcd.queue';
 
   const routingKey1 = 'sensors.temperature';
   const routingKey2 = 'sensors.humidity';
   const routingKey3 = 'sensors.motion';
-  const routingKey4 = 'actuators.plugwise.lamp';
-  const routingKey5 = 'actuators.plugwise.fan';
-  const routingKey6 = 'actuators.lcd';
+  // const routingKey4 = 'actuators.plugwise.lamp';
+  // const routingKey5 = 'actuators.plugwise.fan';
+  // const routingKey6 = 'actuators.lcd';
 
+  /* AMQP connection, channel creation */
   const connection = await amqp.createConnection({ connectionUri });
   const channel = await amqp.createChannel({ connection });
 
+  /* AMQP Exchanges creation */
   await amqp.assertExchange({ channel, exchangeName: exchangeName1 });
   await amqp.assertExchange({ channel, exchangeName: exchangeName2 });
 
+  /* AMQP Queues creation */
   await amqp.assertQueue({ channel, queueName: queueName1 });
   await amqp.assertQueue({ channel, queueName: queueName2 });
   await amqp.assertQueue({ channel, queueName: queueName3 });
@@ -74,6 +81,7 @@ import {
   // await amqp.assertQueue({ channel, queueName: queueName5 });
   // await amqp.assertQueue({ channel, queueName: queueName6 });
 
+  /* AMQP queues bindings to exchange */
   await amqp.bindQueueToExchange({
     channel,
     exchangeName: exchangeName1,
@@ -116,6 +124,8 @@ import {
   //   routingKey: routingKey6,
   // });
 
+  /* ***************************************************************************** */
+
   // await amqp.publish({
   //   channel,
   //   exchangeName: exchangeName1,
@@ -130,6 +140,9 @@ import {
   //   messageJSON: { value: Math.random() * 25 + 15, createdAt: Date.now() },
   // });
 
+  /* ***************************************************************************** */
+
+  /* Handle messages consumed by the server */
   const handleMessageReceived = async message => {
     if (message) {
       if (
@@ -166,6 +179,7 @@ import {
   };
 
   io.on('connection', () => {
+    /* Consume messages on the sensors queues */
     amqp.consume({
       channel,
       queueName: queueName1,
@@ -203,15 +217,18 @@ import {
   //   onMessageReceived: handleMessageReceived,
   // });
 
+  /* Initialize server state */
   const state = {
     isFanOn: false,
     isLampOn: false,
     lcdDisplayText: '',
   };
 
+  /* Mongodb connection */
   const mongodbConnectionString = 'mongodb://127.0.0.1/green-chamber';
   mongoose.connect(mongodbConnectionString, { useNewUrlParser: true });
 
+  /* Initialize and run the server */
   const app = express();
   const httpPort = 4000;
 
