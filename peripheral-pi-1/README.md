@@ -16,9 +16,7 @@ But for remote clients, the IP-Address, port, virtual host, and credentials need
 
 ``` python 
 credentials = pika.PlainCredentials(<username>, <password>)
-```
 
-``` python 
 connection = pika.BlockingConnection(pika.ConnectionParameters('192.168.xxx.xxx', 5672, '/', credentials))
 ```
 
