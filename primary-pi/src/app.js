@@ -40,12 +40,12 @@ import {
   // console.log('EVENTS >', events);
 
   /* Initialize socket */
-  const io = socket();
-  const socketsPort = 4001;
-
-  io.listen(socketsPort);
-  // eslint-disable-next-line no-console
-  console.log(`Sockets server listening on port ${socketsPort}...`);
+  // const io = socket();
+  // const socketsPort = 4001;
+  //
+  // io.listen(socketsPort);
+  // // eslint-disable-next-line no-console
+  // console.log(`Sockets server listening on port ${socketsPort}...`);
 
   const connectionUri = 'amqp://localhost';
   const exchangeName1 = 'sensors-exchange';
@@ -66,17 +66,36 @@ import {
   // const routingKey6 = 'actuators.lcd';
 
   /* AMQP connection, channel creation */
-  const connection = await amqp.createConnection({ connectionUri });
-  const channel = await amqp.createChannel({ connection });
+  const connection = await amqp.createConnection({
+    connectionUri,
+  });
+  const channel = await amqp.createChannel({
+    connection,
+  });
 
   /* AMQP Exchanges creation */
-  await amqp.assertExchange({ channel, exchangeName: exchangeName1 });
-  await amqp.assertExchange({ channel, exchangeName: exchangeName2 });
+  await amqp.assertExchange({
+    channel,
+    exchangeName: exchangeName1,
+  });
+  await amqp.assertExchange({
+    channel,
+    exchangeName: exchangeName2,
+  });
 
   /* AMQP Queues creation */
-  await amqp.assertQueue({ channel, queueName: queueName1 });
-  await amqp.assertQueue({ channel, queueName: queueName2 });
-  await amqp.assertQueue({ channel, queueName: queueName3 });
+  await amqp.assertQueue({
+    channel,
+    queueName: queueName1,
+  });
+  await amqp.assertQueue({
+    channel,
+    queueName: queueName2,
+  });
+  await amqp.assertQueue({
+    channel,
+    queueName: queueName3,
+  });
   // await amqp.assertQueue({ channel, queueName: queueName4 });
   // await amqp.assertQueue({ channel, queueName: queueName5 });
   // await amqp.assertQueue({ channel, queueName: queueName6 });
@@ -126,12 +145,15 @@ import {
 
   /* ***************************************************************************** */
 
-  // await amqp.publish({
-  //   channel,
-  //   exchangeName: exchangeName1,
-  //   routingKey: routingKey1,
-  //   messageJSON: { value: Math.random() * 25 + 15, createdAt: Date.now() },
-  // });
+  await amqp.publish({
+    channel,
+    exchangeName: exchangeName1,
+    routingKey: routingKey1,
+    messageJSON: {
+      value: Math.random() * 25 + 15,
+      createdAt: Date.now(),
+    },
+  });
 
   // await amqp.publish({
   //   channel,
@@ -170,7 +192,7 @@ import {
       await logic.handleMessageReceived({
         routingKey: message.fields.routingKey,
         message: messageJSON,
-        io,
+        // io,
       });
 
       console.log('MESSAGE >', messageJSON);
@@ -178,26 +200,26 @@ import {
     }
   };
 
-  io.on('connection', () => {
-    /* Consume messages on the sensor's queues */
-    amqp.consume({
-      channel,
-      queueName: queueName1,
-      onMessageReceived: handleMessageReceived,
-    });
-
-    amqp.consume({
-      channel,
-      queueName: queueName2,
-      onMessageReceived: handleMessageReceived,
-    });
-
-    amqp.consume({
-      channel,
-      queueName: queueName3,
-      onMessageReceived: handleMessageReceived,
-    });
+  // io.on('connection', () => {
+  /* Consume messages on the sensor's queues */
+  amqp.consume({
+    channel,
+    queueName: queueName1,
+    onMessageReceived: handleMessageReceived,
   });
+
+  amqp.consume({
+    channel,
+    queueName: queueName2,
+    onMessageReceived: handleMessageReceived,
+  });
+
+  amqp.consume({
+    channel,
+    queueName: queueName3,
+    onMessageReceived: handleMessageReceived,
+  });
+  // });
 
   // amqp.consume({
   //   channel,
@@ -226,17 +248,31 @@ import {
 
   /* Connect to MongoDB */
   const mongodbConnectionString = 'mongodb://127.0.0.1/green-chamber';
-  mongoose.connect(mongodbConnectionString, { useNewUrlParser: true });
+  mongoose.connect(mongodbConnectionString, {
+    useNewUrlParser: true,
+  });
 
   /* Initialize and run server */
   const app = express();
   const httpPort = 4000;
 
   app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(
+    bodyParser.urlencoded({
+      extended: true,
+    }),
+  );
   app.use(cors());
 
-  app.use('/api/', api({ amqp, channel, calendar, state }));
+  app.use(
+    '/api/',
+    api({
+      amqp,
+      channel,
+      calendar,
+      state,
+    }),
+  );
 
   app.listen(httpPort, () => {
     // eslint-disable-next-line no-console

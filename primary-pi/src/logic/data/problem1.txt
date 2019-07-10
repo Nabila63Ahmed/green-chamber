@@ -1,0 +1,12 @@
+(define (problem problem-green-chamber)
+  (:domain green-chamber)
+  (:objects
+   googleCalendar - calendar
+   temperature humidity motion - sensor
+   screen - lcd
+   lamp fan - actuator)
+  (:init (on fan)
+      (movement motion)
+      (meeting googleCalendar))
+  (:goal (and (on lamp) (occupied screen) (not (on fan))))
+)
