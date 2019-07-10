@@ -18,58 +18,35 @@ var state = {
 // Domain is static and it is loaded from the file
 var domain = '';
 
-fs.readFile('./src/logic/data/domain.txt', 'utf8', function(
+fs.readFile('./src/logic/data/domain.pddl', 'utf8', function(
   err,
   domainContent,
 ) {
   if (err) throw err;
 
   domain = domainContent;
-  //   //console.log(problemContent);
-  //   problem = problemContent;
-  //
 });
 
 // Problem changes and it is defined as string
 var problem = `(define (problem problem-green-chamber)
   (:domain green-chamber)
-
   (:objects
-   calendarO - calendar
-   temperatureO - temperature
-   humidityO - humidity
-   motitonO - motion
-   lcdO - lcd
-   lampO - lamp
-   fanO - fan) \n\n`;
-
-// const loadDomain = async () => {
-//
-//   // return fs.readFile('./src/logic/data/domain.txt', 'utf8'
-//
-//   //domain = domainContent;
-//
-//   return fs.readFile('./src/logic/data/problem.txt', 'utf8', function(err, problemContent) {
-//     return problemContent;
-//     //   if (err) throw err;
-//     //
-//     //   //console.log(problemContent);
-//     //   problem = problemContent;
-//     //
-//     // });
-//   });
-//   // return domainTemp;
-// }
+    calendarO - calendar
+    temperatureO - temperature
+    humidityO - humidity
+    motionO - motion
+    lcdO - lcd
+    lampO - lamp
+    fanO - fan)\n`;
 
 function solve() {
   axios
     .post('http://solver.planning.domains/solve-and-validate', {
-      domain: domain,
-      problem: problem,
+      domain,
+      problem,
     })
     .then(res => {
-      //console.log(`statusCode: ${res.statusCode}`)
-      console.log(res.data);
+      // console.log(res.data);
       res.data.result.plan.forEach(function(value) {
         console.log(value.action);
       });
@@ -80,43 +57,51 @@ function solve() {
 }
 
 function convertToPDDL() {
-  var initialState = `(:init\n`;
-  initialState = `${initialState} ${
-    state.lamp ? ' (on lampO)' : ' (not (on lampO))'
-  }\n`;
-  initialState = `${initialState} ${
-    state.fan ? ' (on fanO)' : ' (not (on fanO))'
-  }\n`;
-  initialState = `${initialState} ${
-    state.lcd ? ' (occupied lcdO)' : ' (not (occupied lcdO))'
-  }\n`;
-  initialState = `${initialState} ${
-    state.movement ? ' (movement motionO)' : ' (not (movement motionO))'
-  }\n`;
-  initialState = `${initialState} ${
-    state.hot ? ' (hot temperatureO)' : ' (not (hot temperatureO))'
-  }\n`;
-  initialState = `${initialState} ${
-    state.damp ? ' (damp humidityO)' : ' (not (damp humidityO))'
-  }\n`;
-  initialState = `${initialState} ${
-    state.meeting ? ' (meeting calendarO)' : ' (not (meeting calendarO))'
-  }\n`;
-  initialState = `${initialState})\n\n`;
+  var initialState = `(:init
+    (on fanO)
+    (movement motionO)
+    (meeting calendarO))\n`;
+  // initialState = `${initialState} ${
+  //   state.lamp ? ' (on lampO)' : ' (not (on lampO))'
+  // }\n`;
+  // initialState = `${initialState} ${
+  //   state.fan ? ' (on fanO)' : ' (not (on fanO))'
+  // }\n`;
+  // initialState = `${initialState} ${
+  //   state.lcd ? ' (occupied lcdO)' : ' (not (occupied lcdO))'
+  // }\n`;
+  // initialState = `${initialState} ${
+  //   state.movement ? ' (movement motionO)' : ' (not (movement motionO))'
+  // }\n`;
+  // initialState = `${initialState} ${
+  //   state.hot ? ' (hot temperatureO)' : ' (not (hot temperatureO))'
+  // }\n`;
+  // initialState = `${initialState} ${
+  //   state.damp ? ' (damp humidityO)' : ' (not (damp humidityO))'
+  // }\n`;
+  // initialState = `${initialState} ${
+  //   state.meeting ? ' (meeting calendarO)' : ' (not (meeting calendarO))'
+  // }\n`;
+  // initialState = `${initialState})`;
 
-  var goal = ` (:goal\n  (and\n`;
-  goal = `${goal} ${
-    state.hot || state.damp ? ' (on fanO)' : ' (not (on fanO))'
-  }\n`;
-  goal = `${goal} ${
-    state.movement && state.meeting ? ' (on lampO)' : ' (not (on lampO))'
-  }\n`;
-  goal = `${goal} ${
-    state.meeting ? ' (occupied lcdO)' : ' (not (occupied lcdO))'
-  }`;
-  goal = `${goal}))`;
+  var goal = `(:goal  
+        (and
+          (on lampO)
+          (occupied lcdO)
+          (not (on fanO))
+        )))`;
+  // goal = `${goal} ${
+  //   state.hot || state.damp ? ' (on fanO)' : ' (not (on fanO))'
+  // }\n`;
+  // goal = `${goal} ${
+  //   state.movement && state.meeting ? ' (on lampO)' : ' (not (on lampO))'
+  // }\n`;
+  // goal = `${goal} ${
+  //   state.meeting ? ' (occupied lcdO)' : ' (not (occupied lcdO))'
+  // }`;
+  // goal = `${goal}))`;
 
-  problem = `${problem} ${initialState} ${goal})`;
+  problem = `${problem} ${initialState} ${goal}`;
   console.log(problem);
   console.log(domain);
 
