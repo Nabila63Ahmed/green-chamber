@@ -10,15 +10,15 @@ var state = {
   fan: false,
   lcd: false,
   movement: false,
-  hot: false,
-  damp: false,
+  temperature: 20,
+  humidity: 45,
   meeting: false,
 };
 
 // Domain is static and it is loaded from the file
 var domain = '';
 
-fs.readFile('./src/logic/data/domain.pddl', 'utf8', function(
+fs.readFile('./src/logic/data/domain0.pddl', 'utf8', function(
   err,
   domainContent,
 ) {
@@ -57,39 +57,30 @@ function solve() {
 }
 
 function convertToPDDL() {
-  var initialState = `(:init
-    (on fanO)
-    (movement motionO)
-    (meeting calendarO))\n`;
-  // initialState = `${initialState} ${
-  //   state.lamp ? ' (on lampO)' : ' (not (on lampO))'
-  // }\n`;
-  // initialState = `${initialState} ${
-  //   state.fan ? ' (on fanO)' : ' (not (on fanO))'
-  // }\n`;
-  // initialState = `${initialState} ${
-  //   state.lcd ? ' (occupied lcdO)' : ' (not (occupied lcdO))'
-  // }\n`;
-  // initialState = `${initialState} ${
-  //   state.movement ? ' (movement motionO)' : ' (not (movement motionO))'
-  // }\n`;
-  // initialState = `${initialState} ${
-  //   state.hot ? ' (hot temperatureO)' : ' (not (hot temperatureO))'
-  // }\n`;
-  // initialState = `${initialState} ${
-  //   state.damp ? ' (damp humidityO)' : ' (not (damp humidityO))'
-  // }\n`;
-  // initialState = `${initialState} ${
-  //   state.meeting ? ' (meeting calendarO)' : ' (not (meeting calendarO))'
-  // }\n`;
-  // initialState = `${initialState})`;
+  // var initialState = `(:init
+  //   (on fanO)
+  //   (movement motionO)
+  //   (meeting calendarO))\n`;
 
-  var goal = `(:goal  
-        (and
-          (on lampO)
-          (occupied lcdO)
-          (not (on fanO))
-        )))`;
+  var initialState = `(:init\n`;
+  initialState = `${initialState} ${state.lamp ? ' (on lampO)\n' : ''}`;
+  initialState = `${initialState} ${state.fan ? ' (on fanO)\n' : ''}`;
+  initialState = `${initialState} ${state.lcd ? ' (occupied lcdO)\n' : ''}`;
+  initialState = `${initialState} ${
+    state.movement ? ' (movement motionO)\n' : ''
+  }`;
+  initialState = `${initialState} (= (current_temperature) ${state.temperature})\n`;
+  initialState = `${initialState} (= (current_humidity) ${state.humidity})\n`;
+  initialState = `${initialState} ${
+    state.meeting ? ' (meeting calendarO)\n' : ''
+  }`;
+  initialState = `${initialState})\n`;
+
+  var goal = `(:goal
+    (and (comfort)
+         (efficiency)
+         (peace)
+    )))`;
   // goal = `${goal} ${
   //   state.hot || state.damp ? ' (on fanO)' : ' (not (on fanO))'
   // }\n`;
