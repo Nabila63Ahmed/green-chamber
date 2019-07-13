@@ -8,6 +8,7 @@ mac = "000D6F0004B1E59E"
 
 stick = Stick(DEFAULT_PORT)
 circle = Circle(mac, stick)
+circle.switch_off()
 
 credentials = pika.PlainCredentials(username, password)
 connection = pika.BlockingConnection(pika.ConnectionParameters(ip, port, host, credentials))

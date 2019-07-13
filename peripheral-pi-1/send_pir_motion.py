@@ -20,19 +20,25 @@ while True:
     try:
         motion=grovepi.digitalRead(pir_sensor)
         if motion==0 or motion==1:
+            now = int(round(time.time() * 1000)) # Current time in miliseconds
             if motion==1:
-                now = int(round(time.time() * 1000)) # Current time in miliseconds
                 message = {
                         "value": 1,
                         "createdAt": now
                         }
                 message_json = json.dumps(message)
                 print ('Motion Detected')
-                channel.basic_publish(exchange=exchange_name, routing_key=routing_key_name, body=message_json)
-                print(" [x] Sent %r:%r" % (routing_key_name, message_json))
             else:
+                message = {
+                        "value": 0,
+                        "createdAt": now
+                        }
+                message_json = json.dumps(message)
                 print ('-')
-        time.sleep(.5)
+            channel.basic_publish(exchange=exchange_name, routing_key=routing_key_name, body=message_json)
+            print(" [x] Sent %r:%r" % (routing_key_name, message_json))
+        time.sleep(5)
+        print(motion)
     except IOError:
         print ("Error")
         connection.close()

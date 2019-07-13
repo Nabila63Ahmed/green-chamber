@@ -1,5 +1,5 @@
-ip = '141.58.35.115'
+ip = '141.58.219.33'
 port = 5672
-username = 'guest'
-password = 'guest'
+username = 'admin'
+password = 'admin'
 host = '/'

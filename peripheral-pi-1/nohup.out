@@ -97,3 +97,369 @@ Traceback (most recent call last):
   File "/usr/local/lib/python2.7/dist-packages/pika/adapters/blocking_connection.py", line 451, in _create_connection
     raise self._reap_last_connection_workflow_error(error)
 pika.exceptions.AMQPConnectionError
+Traceback (most recent call last):
+  File "receive_lcd_instruction.py", line 14, in <module>
+    channel.queue_declare(queue_name, durable=True, exclusive=True)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 2498, in queue_declare
+    self._flush_output(declare_ok_result.is_ready)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 1331, in _flush_output
+    raise self._closing_reason  # pylint: disable=E0702
+pika.exceptions.ChannelClosedByBroker: (405, "RESOURCE_LOCKED - cannot obtain exclusive access to locked queue 'actuators.lcd.queue' in vhost '/'. It could be originally declared on another connection or the exclusive property value does not match that of the original declaration.")
+Traceback (most recent call last):
+  File "receive_fan_plugwise_instruction.py", line 21, in <module>
+    channel.queue_declare(queue_name, durable=True, exclusive=True)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 2498, in queue_declare
+    self._flush_output(declare_ok_result.is_ready)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 1331, in _flush_output
+    raise self._closing_reason  # pylint: disable=E0702
+pika.exceptions.ChannelClosedByBroker: (405, "RESOURCE_LOCKED - cannot obtain exclusive access to locked queue 'actuators.plugwise.fan.queue' in vhost '/'. It could be originally declared on another connection or the exclusive property value does not match that of the original declaration.")
+Traceback (most recent call last):
+  File "receive_lamp_plugwise_instruction.py", line 21, in <module>
+    channel.queue_declare(queue_name, durable=True, exclusive=True)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 2498, in queue_declare
+    self._flush_output(declare_ok_result.is_ready)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 1331, in _flush_output
+    raise self._closing_reason  # pylint: disable=E0702
+pika.exceptions.ChannelClosedByBroker: (405, "RESOURCE_LOCKED - cannot obtain exclusive access to locked queue 'actuators.plugwise.lamp.queue' in vhost '/'. It could be originally declared on another connection or the exclusive property value does not match that of the original declaration.")
+Traceback (most recent call last):
+  File "receive_fan_plugwise_instruction.py", line 21, in <module>
+    channel.queue_declare(queue_name, durable=True, exclusive=True)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 2498, in queue_declare
+    self._flush_output(declare_ok_result.is_ready)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 1331, in _flush_output
+    raise self._closing_reason  # pylint: disable=E0702
+pika.exceptions.ChannelClosedByBroker: (405, "RESOURCE_LOCKED - cannot obtain exclusive access to locked queue 'actuators.plugwise.fan.queue' in vhost '/'. It could be originally declared on another connection or the exclusive property value does not match that of the original declaration.")
+Traceback (most recent call last):
+  File "receive_lcd_instruction.py", line 14, in <module>
+    channel.queue_declare(queue_name, durable=True, exclusive=True)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 2498, in queue_declare
+    self._flush_output(declare_ok_result.is_ready)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 1331, in _flush_output
+    raise self._closing_reason  # pylint: disable=E0702
+pika.exceptions.ChannelClosedByBroker: (405, "RESOURCE_LOCKED - cannot obtain exclusive access to locked queue 'actuators.lcd.queue' in vhost '/'. It could be originally declared on another connection or the exclusive property value does not match that of the original declaration.")
+Traceback (most recent call last):
+  File "receive_lamp_plugwise_instruction.py", line 21, in <module>
+    channel.queue_declare(queue_name, durable=True, exclusive=True)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 2498, in queue_declare
+    self._flush_output(declare_ok_result.is_ready)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 1331, in _flush_output
+    raise self._closing_reason  # pylint: disable=E0702
+pika.exceptions.ChannelClosedByBroker: (405, "RESOURCE_LOCKED - cannot obtain exclusive access to locked queue 'actuators.plugwise.lamp.queue' in vhost '/'. It could be originally declared on another connection or the exclusive property value does not match that of the original declaration.")
+Traceback (most recent call last):
+  File "receive_lamp_plugwise_instruction.py", line 9, in <module>
+    stick = Stick(DEFAULT_PORT)
+  File "/home/pi/.local/lib/python3.5/site-packages/plugwise/api.py", line 35, in __init__
+    self.init()
+  File "/home/pi/.local/lib/python3.5/site-packages/plugwise/api.py", line 41, in init
+    resp = self.expect_response(PlugwiseInitResponse)
+  File "/home/pi/.local/lib/python3.5/site-packages/plugwise/api.py", line 73, in expect_response
+    retval = self._recv_response(resp)
+  File "/home/pi/.local/lib/python3.5/site-packages/plugwise/api.py", line 53, in _recv_response
+    raise TimeoutException("Timeout while waiting for response from device")
+plugwise.exceptions.TimeoutException: Timeout while waiting for response from device
+Traceback (most recent call last):
+  File "receive_fan_plugwise_instruction.py", line 9, in <module>
+    stick = Stick(DEFAULT_PORT)
+  File "/home/pi/.local/lib/python3.5/site-packages/plugwise/api.py", line 35, in __init__
+    self.init()
+  File "/home/pi/.local/lib/python3.5/site-packages/plugwise/api.py", line 41, in init
+    resp = self.expect_response(PlugwiseInitResponse)
+  File "/home/pi/.local/lib/python3.5/site-packages/plugwise/api.py", line 73, in expect_response
+    retval = self._recv_response(resp)
+  File "/home/pi/.local/lib/python3.5/site-packages/plugwise/api.py", line 53, in _recv_response
+    raise TimeoutException("Timeout while waiting for response from device")
+plugwise.exceptions.TimeoutException: Timeout while waiting for response from device
+Traceback (most recent call last):
+  File "receive_fan_plugwise_instruction.py", line 9, in <module>
+    stick = Stick(DEFAULT_PORT)
+  File "/home/pi/.local/lib/python3.5/site-packages/plugwise/api.py", line 35, in __init__
+    self.init()
+  File "/home/pi/.local/lib/python3.5/site-packages/plugwise/api.py", line 41, in init
+    resp = self.expect_response(PlugwiseInitResponse)
+  File "/home/pi/.local/lib/python3.5/site-packages/plugwise/api.py", line 73, in expect_response
+    retval = self._recv_response(resp)
+  File "/home/pi/.local/lib/python3.5/site-packages/plugwise/api.py", line 53, in _recv_response
+    raise TimeoutException("Timeout while waiting for response from device")
+plugwise.exceptions.TimeoutException: Timeout while waiting for response from device
+Traceback (most recent call last):
+  File "receive_lamp_plugwise_instruction.py", line 9, in <module>
+    stick = Stick(DEFAULT_PORT)
+  File "/home/pi/.local/lib/python3.5/site-packages/plugwise/api.py", line 35, in __init__
+    self.init()
+  File "/home/pi/.local/lib/python3.5/site-packages/plugwise/api.py", line 41, in init
+    resp = self.expect_response(PlugwiseInitResponse)
+  File "/home/pi/.local/lib/python3.5/site-packages/plugwise/api.py", line 73, in expect_response
+    retval = self._recv_response(resp)
+  File "/home/pi/.local/lib/python3.5/site-packages/plugwise/api.py", line 53, in _recv_response
+    raise TimeoutException("Timeout while waiting for response from device")
+plugwise.exceptions.TimeoutException: Timeout while waiting for response from device
+ [*] Waiting for logs. To exit press CTRL+C
+ [x] 'actuators.lcd':{'value': 'Current meeting: Test Event I'}
+Traceback (most recent call last):
+  File "receive_lcd_instruction.py", line 27, in <module>
+    channel.start_consuming()
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 1857, in start_consuming
+    self._process_data_events(time_limit=None)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 2018, in _process_data_events
+    self.connection.process_data_events(time_limit=time_limit)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 835, in process_data_events
+    self._dispatch_channel_events()
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 567, in _dispatch_channel_events
+    impl_channel._get_cookie()._dispatch_events()
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 1485, in _dispatch_events
+    evt.properties, evt.body)
+  File "receive_lcd_instruction.py", line 22, in callback
+    setRGB(0,255,0)
+  File "/home/pi/green-chamber/grove_rgb_lcd.py", line 22, in setRGB
+    bus.write_byte_data(DISPLAY_RGB_ADDR,1,0)
+  File "/usr/local/lib/python3.5/dist-packages/smbus_cffi-0.5.1-py3.5-linux-armv7l.egg/smbus/util.py", line 59, in validator
+    return fn(*args, **kwdefaults)
+  File "/usr/local/lib/python3.5/dist-packages/smbus_cffi-0.5.1-py3.5-linux-armv7l.egg/smbus/smbus.py", line 145, in write_byte_data
+    raise IOError(ffi.errno)
+OSError: 121
+Traceback (most recent call last):
+  File "receive_lamp_plugwise_instruction.py", line 21, in <module>
+    channel.queue_declare(queue_name, durable=True, exclusive=True)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 2498, in queue_declare
+    self._flush_output(declare_ok_result.is_ready)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 1331, in _flush_output
+    raise self._closing_reason  # pylint: disable=E0702
+pika.exceptions.ChannelClosedByBroker: (405, "RESOURCE_LOCKED - cannot obtain exclusive access to locked queue 'actuators.plugwise.lamp.queue' in vhost '/'. It could be originally declared on another connection or the exclusive property value does not match that of the original declaration.")
+Traceback (most recent call last):
+  File "receive_lcd_instruction.py", line 14, in <module>
+    channel.queue_declare(queue_name, durable=True, exclusive=True)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 2498, in queue_declare
+    self._flush_output(declare_ok_result.is_ready)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 1331, in _flush_output
+    raise self._closing_reason  # pylint: disable=E0702
+pika.exceptions.ChannelClosedByBroker: (405, "RESOURCE_LOCKED - cannot obtain exclusive access to locked queue 'actuators.lcd.queue' in vhost '/'. It could be originally declared on another connection or the exclusive property value does not match that of the original declaration.")
+Traceback (most recent call last):
+  File "receive_fan_plugwise_instruction.py", line 21, in <module>
+    channel.queue_declare(queue_name, durable=True, exclusive=True)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 2498, in queue_declare
+    self._flush_output(declare_ok_result.is_ready)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 1331, in _flush_output
+    raise self._closing_reason  # pylint: disable=E0702
+pika.exceptions.ChannelClosedByBroker: (405, "RESOURCE_LOCKED - cannot obtain exclusive access to locked queue 'actuators.plugwise.fan.queue' in vhost '/'. It could be originally declared on another connection or the exclusive property value does not match that of the original declaration.")
+ [*] Waiting for logs. To exit press CTRL+C
+ [x] 'actuators.lcd':{'value': 'Current meeting: Test Event I'}
+Traceback (most recent call last):
+  File "receive_lcd_instruction.py", line 27, in <module>
+    channel.start_consuming()
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 1857, in start_consuming
+    self._process_data_events(time_limit=None)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 2018, in _process_data_events
+    self.connection.process_data_events(time_limit=time_limit)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 835, in process_data_events
+    self._dispatch_channel_events()
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 567, in _dispatch_channel_events
+    impl_channel._get_cookie()._dispatch_events()
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 1485, in _dispatch_events
+    evt.properties, evt.body)
+  File "receive_lcd_instruction.py", line 22, in callback
+    setRGB(0,255,0)
+  File "/home/pi/green-chamber/grove_rgb_lcd.py", line 21, in setRGB
+    bus.write_byte_data(DISPLAY_RGB_ADDR,0,0)
+  File "/usr/local/lib/python3.5/dist-packages/smbus_cffi-0.5.1-py3.5-linux-armv7l.egg/smbus/util.py", line 59, in validator
+    return fn(*args, **kwdefaults)
+  File "/usr/local/lib/python3.5/dist-packages/smbus_cffi-0.5.1-py3.5-linux-armv7l.egg/smbus/smbus.py", line 145, in write_byte_data
+    raise IOError(ffi.errno)
+OSError: 121
+Traceback (most recent call last):
+  File "receive_fan_plugwise_instruction.py", line 21, in <module>
+    channel.queue_declare(queue_name, durable=True, exclusive=True)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 2498, in queue_declare
+    self._flush_output(declare_ok_result.is_ready)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 1331, in _flush_output
+    raise self._closing_reason  # pylint: disable=E0702
+pika.exceptions.ChannelClosedByBroker: (405, "RESOURCE_LOCKED - cannot obtain exclusive access to locked queue 'actuators.plugwise.fan.queue' in vhost '/'. It could be originally declared on another connection or the exclusive property value does not match that of the original declaration.")
+Traceback (most recent call last):
+  File "receive_lamp_plugwise_instruction.py", line 21, in <module>
+    channel.queue_declare(queue_name, durable=True, exclusive=True)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 2498, in queue_declare
+    self._flush_output(declare_ok_result.is_ready)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 1331, in _flush_output
+    raise self._closing_reason  # pylint: disable=E0702
+pika.exceptions.ChannelClosedByBroker: (405, "RESOURCE_LOCKED - cannot obtain exclusive access to locked queue 'actuators.plugwise.lamp.queue' in vhost '/'. It could be originally declared on another connection or the exclusive property value does not match that of the original declaration.")
+Traceback (most recent call last):
+  File "receive_lcd_instruction.py", line 14, in <module>
+    channel.queue_declare(queue_name, durable=True, exclusive=True)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 2498, in queue_declare
+    self._flush_output(declare_ok_result.is_ready)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 1331, in _flush_output
+    raise self._closing_reason  # pylint: disable=E0702
+pika.exceptions.ChannelClosedByBroker: (405, "RESOURCE_LOCKED - cannot obtain exclusive access to locked queue 'actuators.lcd.queue' in vhost '/'. It could be originally declared on another connection or the exclusive property value does not match that of the original declaration.")
+Traceback (most recent call last):
+  File "receive_fan_plugwise_instruction.py", line 21, in <module>
+    channel.queue_declare(queue_name, durable=True, exclusive=True)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 2498, in queue_declare
+    self._flush_output(declare_ok_result.is_ready)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 1331, in _flush_output
+    raise self._closing_reason  # pylint: disable=E0702
+pika.exceptions.ChannelClosedByBroker: (405, "RESOURCE_LOCKED - cannot obtain exclusive access to locked queue 'actuators.plugwise.fan.queue' in vhost '/'. It could be originally declared on another connection or the exclusive property value does not match that of the original declaration.")
+Traceback (most recent call last):
+  File "receive_lcd_instruction.py", line 14, in <module>
+    channel.queue_declare(queue_name, durable=True, exclusive=True)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 2498, in queue_declare
+    self._flush_output(declare_ok_result.is_ready)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 1331, in _flush_output
+    raise self._closing_reason  # pylint: disable=E0702
+pika.exceptions.ChannelClosedByBroker: (405, "RESOURCE_LOCKED - cannot obtain exclusive access to locked queue 'actuators.lcd.queue' in vhost '/'. It could be originally declared on another connection or the exclusive property value does not match that of the original declaration.")
+Traceback (most recent call last):
+  File "receive_lamp_plugwise_instruction.py", line 21, in <module>
+    channel.queue_declare(queue_name, durable=True, exclusive=True)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 2498, in queue_declare
+    self._flush_output(declare_ok_result.is_ready)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 1331, in _flush_output
+    raise self._closing_reason  # pylint: disable=E0702
+pika.exceptions.ChannelClosedByBroker: (405, "RESOURCE_LOCKED - cannot obtain exclusive access to locked queue 'actuators.plugwise.lamp.queue' in vhost '/'. It could be originally declared on another connection or the exclusive property value does not match that of the original declaration.")
+Traceback (most recent call last):
+  File "receive_lcd_instruction.py", line 14, in <module>
+    channel.queue_declare(queue_name, durable=True, exclusive=True)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 2498, in queue_declare
+    self._flush_output(declare_ok_result.is_ready)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 1331, in _flush_output
+    raise self._closing_reason  # pylint: disable=E0702
+pika.exceptions.ChannelClosedByBroker: (405, "RESOURCE_LOCKED - cannot obtain exclusive access to locked queue 'actuators.lcd.queue' in vhost '/'. It could be originally declared on another connection or the exclusive property value does not match that of the original declaration.")
+Traceback (most recent call last):
+  File "receive_fan_plugwise_instruction.py", line 21, in <module>
+    channel.queue_declare(queue_name, durable=True, exclusive=True)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 2498, in queue_declare
+    self._flush_output(declare_ok_result.is_ready)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 1331, in _flush_output
+    raise self._closing_reason  # pylint: disable=E0702
+pika.exceptions.ChannelClosedByBroker: (405, "RESOURCE_LOCKED - cannot obtain exclusive access to locked queue 'actuators.plugwise.fan.queue' in vhost '/'. It could be originally declared on another connection or the exclusive property value does not match that of the original declaration.")
+Traceback (most recent call last):
+  File "receive_lamp_plugwise_instruction.py", line 21, in <module>
+    channel.queue_declare(queue_name, durable=True, exclusive=True)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 2498, in queue_declare
+    self._flush_output(declare_ok_result.is_ready)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 1331, in _flush_output
+    raise self._closing_reason  # pylint: disable=E0702
+pika.exceptions.ChannelClosedByBroker: (405, "RESOURCE_LOCKED - cannot obtain exclusive access to locked queue 'actuators.plugwise.lamp.queue' in vhost '/'. It could be originally declared on another connection or the exclusive property value does not match that of the original declaration.")
+ [*] Waiting for logs. To exit press CTRL+C
+ [x] 'actuators.lcd':{'value': 'Current meeting: Test Event I'}
+ [x] 'actuators.lcd':{'value': 'Current meeting: Test Event I'}
+Traceback (most recent call last):
+  File "receive_lcd_instruction.py", line 27, in <module>
+    channel.start_consuming()
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 1857, in start_consuming
+    self._process_data_events(time_limit=None)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 2018, in _process_data_events
+    self.connection.process_data_events(time_limit=time_limit)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 835, in process_data_events
+    self._dispatch_channel_events()
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 567, in _dispatch_channel_events
+    impl_channel._get_cookie()._dispatch_events()
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 1485, in _dispatch_events
+    evt.properties, evt.body)
+  File "receive_lcd_instruction.py", line 22, in callback
+    setRGB(0,255,0)
+  File "/home/pi/green-chamber/grove_rgb_lcd.py", line 21, in setRGB
+    bus.write_byte_data(DISPLAY_RGB_ADDR,0,0)
+  File "/usr/local/lib/python3.5/dist-packages/smbus_cffi-0.5.1-py3.5-linux-armv7l.egg/smbus/util.py", line 59, in validator
+    return fn(*args, **kwdefaults)
+  File "/usr/local/lib/python3.5/dist-packages/smbus_cffi-0.5.1-py3.5-linux-armv7l.egg/smbus/smbus.py", line 145, in write_byte_data
+    raise IOError(ffi.errno)
+OSError: 121
+Traceback (most recent call last):
+  File "receive_lamp_plugwise_instruction.py", line 9, in <module>
+    stick = Stick(DEFAULT_PORT)
+  File "/home/pi/.local/lib/python3.5/site-packages/plugwise/api.py", line 35, in __init__
+    self.init()
+  File "/home/pi/.local/lib/python3.5/site-packages/plugwise/api.py", line 41, in init
+    resp = self.expect_response(PlugwiseInitResponse)
+  File "/home/pi/.local/lib/python3.5/site-packages/plugwise/api.py", line 73, in expect_response
+    retval = self._recv_response(resp)
+  File "/home/pi/.local/lib/python3.5/site-packages/plugwise/api.py", line 53, in _recv_response
+    raise TimeoutException("Timeout while waiting for response from device")
+plugwise.exceptions.TimeoutException: Timeout while waiting for response from device
+Traceback (most recent call last):
+  File "receive_fan_plugwise_instruction.py", line 9, in <module>
+    stick = Stick(DEFAULT_PORT)
+  File "/home/pi/.local/lib/python3.5/site-packages/plugwise/api.py", line 35, in __init__
+    self.init()
+  File "/home/pi/.local/lib/python3.5/site-packages/plugwise/api.py", line 41, in init
+    resp = self.expect_response(PlugwiseInitResponse)
+  File "/home/pi/.local/lib/python3.5/site-packages/plugwise/api.py", line 73, in expect_response
+    retval = self._recv_response(resp)
+  File "/home/pi/.local/lib/python3.5/site-packages/plugwise/api.py", line 53, in _recv_response
+    raise TimeoutException("Timeout while waiting for response from device")
+plugwise.exceptions.TimeoutException: Timeout while waiting for response from device
+ [*] Waiting for logs. To exit press CTRL+C
+ [x] 'actuators.lcd':{'value': 'Current meeting: Test Event I'}
+ [x] 'actuators.lcd':{'value': 'Current meeting: Test Event I'}
+Traceback (most recent call last):
+  File "receive_lcd_instruction.py", line 27, in <module>
+    channel.start_consuming()
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 1857, in start_consuming
+    self._process_data_events(time_limit=None)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 2018, in _process_data_events
+    self.connection.process_data_events(time_limit=time_limit)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 835, in process_data_events
+    self._dispatch_channel_events()
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 567, in _dispatch_channel_events
+    impl_channel._get_cookie()._dispatch_events()
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 1485, in _dispatch_events
+    evt.properties, evt.body)
+  File "receive_lcd_instruction.py", line 23, in callback
+    setText(message_JSON['value'])
+  File "/home/pi/green-chamber/grove_rgb_lcd.py", line 51, in setText
+    bus.write_byte_data(DISPLAY_TEXT_ADDR,0x40,ord(c))
+  File "/usr/local/lib/python3.5/dist-packages/smbus_cffi-0.5.1-py3.5-linux-armv7l.egg/smbus/util.py", line 59, in validator
+    return fn(*args, **kwdefaults)
+  File "/usr/local/lib/python3.5/dist-packages/smbus_cffi-0.5.1-py3.5-linux-armv7l.egg/smbus/smbus.py", line 145, in write_byte_data
+    raise IOError(ffi.errno)
+OSError: 121
+  File "send_pir_motion.py", line 24
+    if motion==1:
+                ^
+TabError: inconsistent use of tabs and spaces in indentation
+Traceback (most recent call last):
+  File "receive_lamp_plugwise_instruction.py", line 9, in <module>
+    stick = Stick(DEFAULT_PORT)
+  File "/home/pi/.local/lib/python3.5/site-packages/plugwise/api.py", line 35, in __init__
+    self.init()
+  File "/home/pi/.local/lib/python3.5/site-packages/plugwise/api.py", line 41, in init
+    resp = self.expect_response(PlugwiseInitResponse)
+  File "/home/pi/.local/lib/python3.5/site-packages/plugwise/api.py", line 73, in expect_response
+    retval = self._recv_response(resp)
+  File "/home/pi/.local/lib/python3.5/site-packages/plugwise/api.py", line 53, in _recv_response
+    raise TimeoutException("Timeout while waiting for response from device")
+plugwise.exceptions.TimeoutException: Timeout while waiting for response from device
+Traceback (most recent call last):
+  File "receive_fan_plugwise_instruction.py", line 9, in <module>
+    stick = Stick(DEFAULT_PORT)
+  File "/home/pi/.local/lib/python3.5/site-packages/plugwise/api.py", line 35, in __init__
+    self.init()
+  File "/home/pi/.local/lib/python3.5/site-packages/plugwise/api.py", line 41, in init
+    resp = self.expect_response(PlugwiseInitResponse)
+  File "/home/pi/.local/lib/python3.5/site-packages/plugwise/api.py", line 73, in expect_response
+    retval = self._recv_response(resp)
+  File "/home/pi/.local/lib/python3.5/site-packages/plugwise/api.py", line 53, in _recv_response
+    raise TimeoutException("Timeout while waiting for response from device")
+plugwise.exceptions.TimeoutException: Timeout while waiting for response from device
+ [*] Waiting for logs. To exit press CTRL+C
+ [x] 'actuators.lcd':{'value': 'No ongoing event'}
+Traceback (most recent call last):
+  File "receive_lcd_instruction.py", line 27, in <module>
+    channel.start_consuming()
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 1857, in start_consuming
+    self._process_data_events(time_limit=None)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 2018, in _process_data_events
+    self.connection.process_data_events(time_limit=time_limit)
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 835, in process_data_events
+    self._dispatch_channel_events()
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 567, in _dispatch_channel_events
+    impl_channel._get_cookie()._dispatch_events()
+  File "/home/pi/.local/lib/python3.5/site-packages/pika/adapters/blocking_connection.py", line 1485, in _dispatch_events
+    evt.properties, evt.body)
+  File "receive_lcd_instruction.py", line 22, in callback
+    setRGB(0,255,0)
+  File "/home/pi/green-chamber/grove_rgb_lcd.py", line 23, in setRGB
+    bus.write_byte_data(DISPLAY_RGB_ADDR,0x08,0xaa)
+  File "/usr/local/lib/python3.5/dist-packages/smbus_cffi-0.5.1-py3.5-linux-armv7l.egg/smbus/util.py", line 59, in validator
+    return fn(*args, **kwdefaults)
+  File "/usr/local/lib/python3.5/dist-packages/smbus_cffi-0.5.1-py3.5-linux-armv7l.egg/smbus/smbus.py", line 145, in write_byte_data
+    raise IOError(ffi.errno)
+OSError: 121
