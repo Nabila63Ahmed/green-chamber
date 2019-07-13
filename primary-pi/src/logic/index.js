@@ -7,9 +7,9 @@ var fs = require('fs');
 
 var state = {
   lamp: false,
-  fan: false,
+  fan: true,
   lcd: false,
-  movement: false,
+  motion: false,
   temperature: 20,
   humidity: 45,
   meeting: false,
@@ -39,6 +39,22 @@ var problem = `(define (problem problem-green-chamber)
     lampO - lamp
     fanO - fan)\n`;
 
+var goal = `(:goal
+    (and
+    )))`;
+
+var goalComfort = `(:goal
+    (and (comfort)
+    )))`;
+
+var goalEfficiency = `(:goal
+    (and (efficiency)
+    )))`;
+
+var goalPeace = `(:goal
+    (and (peace)
+    )))`;
+
 function solve() {
   axios
     .post('http://solver.planning.domains/solve-and-validate', {
@@ -56,7 +72,7 @@ function solve() {
     });
 }
 
-function convertToPDDL() {
+function convertToPDDL(problem, goal) {
   // var initialState = `(:init
   //   (on fanO)
   //   (movement motionO)
@@ -76,11 +92,6 @@ function convertToPDDL() {
   }`;
   initialState = `${initialState})\n`;
 
-  var goal = `(:goal
-    (and (comfort)
-         (efficiency)
-         (peace)
-    )))`;
   // goal = `${goal} ${
   //   state.hot || state.damp ? ' (on fanO)' : ' (not (on fanO))'
   // }\n`;
@@ -115,13 +126,9 @@ export const handleMessageReceived = ({
     const type = route[1];
 
     if (type === 'temperature') {
-      console.log(message.value);
-      if (message.value > 25) {
-        state.hot = true;
-      } else {
-        state.hot = false;
-      }
-      convertToPDDL();
+      console.log('Temperature: ' + message.value);
+      state.temperature = message.value;
+      goal = goalComfort;
       //solve();
 
       // io.sockets.emit('temperature-changed', message);
@@ -129,11 +136,23 @@ export const handleMessageReceived = ({
     }
 
     if (type === 'humidity') {
+      console.log('Humidity: ' + message.value);
+      state.humidity = message.value;
+      goal = goalComfort;
+
       // io.sockets.emit('humidity-changed', message);
       // return insertHumidityRecord(message);
     }
 
-    return insertMotionRecord(message);
+    if (type === 'motion') {
+      console.log('Motion: ' + message.value);
+      state.motion = message.value;
+      goal = goalEfficiency;
+
+      // return insertMotionRecord(message);
+    }
+
+    convertToPDDL(problem, goal);
   }
 
   return null;
