@@ -47,7 +47,7 @@ import {
   // eslint-disable-next-line no-console
   console.log(`Sockets server listening on port ${socketsPort}...`);
 
-  const connectionUri = 'amqp://localhost';
+  const connectionUri = 'amqp://admin:admin@localhost';
   const exchangeName1 = 'sensors-exchange';
   const exchangeName2 = 'actuators-exchange';
 
