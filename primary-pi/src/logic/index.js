@@ -54,7 +54,7 @@ const solve = async (domain, problem) => {
   initialState = `${initialState} ${state.lamp ? ' (on lamp_o)\n' : ''}`;
   initialState = `${initialState} ${state.fan ? ' (on fan_o)\n' : ''}`;
   initialState = `${initialState} ${
-    state.motion == 1 ? ' (movement motion_o)\n' : ''
+    state.motion === 1 ? ' (movement motion_o)\n' : ''
   }`;
   initialState = `${initialState} (= (current_temperature) ${state.temperature})\n`;
   initialState = `${initialState} (= (current_humidity) ${state.humidity})\n`;
@@ -64,8 +64,8 @@ const solve = async (domain, problem) => {
   initialState = `${initialState})\n`;
   problem = `${problem} ${initialState} ${goal}`;
 
-  console.log(domain);
-  console.log(problem);
+  // console.log(domain);
+  // console.log(problem);
 
   let actions = [];
 
