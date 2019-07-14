@@ -49,7 +49,7 @@ const goal = `(:goal
          (efficiency)
     )))`;
 
-const solve = async ({ domain, problem }) => {
+const solve = async (domain, problem) => {
   let initialState = `(:init\n`;
   initialState = `${initialState} ${state.lamp ? ' (on lamp_o)\n' : ''}`;
   initialState = `${initialState} ${state.fan ? ' (on fan_o)\n' : ''}`;
@@ -269,7 +269,7 @@ export const handleMessageReceived = async ({
       await insertMotionRecord(message);
     }
 
-    const actions = await solve({ domain, problem });
+    const actions = await solve(domain, problem);
 
     await postprocessing({
       serverState,
