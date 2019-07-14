@@ -226,31 +226,17 @@ import {
 
   /* Connect to MongoDB */
   const mongodbConnectionString = 'mongodb://127.0.0.1/green-chamber';
-  mongoose.connect(mongodbConnectionString, {
-    useNewUrlParser: true,
-  });
+  mongoose.connect(mongodbConnectionString, { useNewUrlParser: true });
 
   /* Initialize and run server */
   const app = express();
   const httpPort = 4000;
 
   app.use(bodyParser.json());
-  app.use(
-    bodyParser.urlencoded({
-      extended: true,
-    }),
-  );
+  app.use(bodyParser.urlencoded({ extended: true }));
   app.use(cors());
 
-  app.use(
-    '/api/',
-    api({
-      amqp,
-      channel,
-      calendar,
-      state,
-    }),
-  );
+  app.use('/api/', api({ amqp, channel, calendar, state }));
 
   app.listen(httpPort, () => {
     // eslint-disable-next-line no-console
