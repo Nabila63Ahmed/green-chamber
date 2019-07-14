@@ -1,12 +1,13 @@
 (define (domain green-chamber)
 
- (:requirements 
-    :strips 
+ (:requirements
+    :adl
     :typing
+    :fluents
   )
 
  (:types
-    sensor plugwise calendar lcd - object
+    sensor plugwise calendar - object
     temperature humidity motion - sensor
     lamp fan - plugwise
   )
@@ -14,45 +15,55 @@
  (:predicates
     (on ?a - plugwise)
     (movement ?m - motion)
-    (hot ?t - temperature)
-    (damp ?h - humidity)
     (meeting ?c - calendar)
-    (occupied ?s - lcd)
+    (comfort)
+    (efficiency)
   )
 
+ (:functions
+    (current_temperature) - number
+    (current_humidity) - number)
+
  (:action switch-on-lamp
-    :parameters (?l - lamp ?m - motion)
-    :precondition (and (not (on ?l)) (movement ?m))
-    :effect (on ?l)
+    :parameters (?l - lamp ?m - motion ?c - calendar)
+    :precondition (and (not (on ?l)) (or (movement ?m) (meeting ?c)))
+    :effect (and (on ?l) (efficiency))
   )
 
  (:action switch-off-lamp
-    :parameters (?l - lamp ?m - motion)
-    :precondition (and (on ?l) (not (movement ?m)))
-    :effect (not (on ?l))
+    :parameters (?l - lamp ?m - motion ?c - calendar)
+    :precondition (and (on ?l) (not (movement ?m)) (not (meeting ?c)))
+    :effect (and (not (on ?l)) (efficiency))
   )
 
  (:action switch-on-fan
-    :parameters (?f - fan ?t - temperature ?h - humidity)
-    :precondition (and (not (on ?f)) (hot ?t) (damp ?h))
-    :effect (and (on ?f))
+    :parameters (?f - fan ?c - calendar ?m - motion)
+    :precondition (and (not (on ?f))
+                       (or (meeting ?c) (movement ?m))
+                       (or (> (current_temperature) 25) (> (current_humidity) 50)))
+    :effect (and (on ?f) (comfort))
   )
 
  (:action switch-off-fan
-    :parameters (?f - fan ?t - temperature ?h - humidity)
-    :precondition (and (on ?f) (not (hot ?t)) (not (damp ?h)))
-    :effect  (not (on ?f))
+    :parameters (?f - fan ?c - calendar ?m - motion)
+    :precondition (and (on ?f)
+                       (or (and (not (movement ?m)) (not (meeting ?c)))
+                           (and (<= (current_temperature) 25) (<= (current_humidity) 50))))
+    :effect (and (not (on ?f)) (comfort))
   )
 
- (:action show-occupied
-    :parameters (?s - lcd ?m - motion ?c - calendar)
-    :precondition (and (movement ?m) (meeting ?c))
-    :effect (occupied ?s)
-  )
+  (:action do-nothing-comfort
+     :parameters (?f - fan ?m - motion ?c - calendar)
+     :precondition (or (and (or (meeting ?c) (movement ?m)) (or (> (current_temperature) 25) (> (current_humidity) 50)) (on ?f))
+                       (and (<= (current_temperature) 25) (<= (current_humidity) 50) (not (on ?f)))
+                       (and (not (movement ?m)) (not (meeting ?c)) (not (on ?f))))
+     :effect (and (comfort))
+   )
 
- (:action show-free
-    :parameters (?s - lcd ?m - motion ?c - calendar)
-    :precondition (and (occupied ?s) (not (movement ?m)) (not (meeting ?c)))
-    :effect (not (occupied ?s))
-  )
+   (:action do-nothing-efficiency
+      :parameters (?l - lamp ?m - motion ?c - calendar)
+      :precondition (or (and (not (movement ?m)) (not (meeting ?c)) (not (on ?l)))
+                        (and (or (movement ?m) (meeting ?c)) (on ?l)))
+      :effect (and (efficiency))
+    )
 )
