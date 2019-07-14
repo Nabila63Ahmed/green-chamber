@@ -1,11 +1,21 @@
-import { insertTemperatureRecord } from '../services/temperature';
-import { insertHumidityRecord } from '../services/humidity';
-import { insertMotionRecord } from '../services/motion';
+/* eslint-disable quotes */
+import axios from 'axios';
+import fs, { stat } from 'fs';
+import _ from 'lodash';
+import {
+  getLastTemperatureRecord,
+  insertTemperatureRecord,
+} from '../services/temperature';
+import {
+  getLastHumidityRecord,
+  insertHumidityRecord,
+} from '../services/humidity';
+import { getLastMotionRecord, insertMotionRecord } from '../services/motion';
+import { getEvents } from '../datasources/google-calendar';
+import { now, add, subtract, toISOString } from '../utilities';
+import * as amqp from '../amqp';
 
-const axios = require('axios');
-var fs = require('fs');
-
-var state = {
+const state = {
   lamp: false,
   fan: true,
   lcd: false,
@@ -16,19 +26,16 @@ var state = {
 };
 
 // Domain is static and it is loaded from the file
-var domain = '';
+let domain = '';
 
-fs.readFile('./src/logic/data/domain0.pddl', 'utf8', function(
-  err,
-  domainContent,
-) {
+fs.readFile('./src/logic/data/domain0.pddl', 'utf8', (err, domainContent) => {
   if (err) throw err;
 
   domain = domainContent;
 });
 
 // Problem changes and it is defined as string
-var problem = `(define (problem problem-green-chamber)
+const problem = `(define (problem problem-green-chamber)
   (:domain green-chamber)
   (:objects
     calendarO - calendar
@@ -39,19 +46,19 @@ var problem = `(define (problem problem-green-chamber)
     lampO - lamp
     fanO - fan)\n`;
 
-var goal = `(:goal
+let goal = `(:goal
     (and
     )))`;
 
-var goalComfort = `(:goal
+const goalComfort = `(:goal
     (and (comfort)
     )))`;
 
-var goalEfficiency = `(:goal
+const goalEfficiency = `(:goal
     (and (efficiency)
     )))`;
 
-var goalPeace = `(:goal
+const goalPeace = `(:goal
     (and (peace)
     )))`;
 
@@ -63,7 +70,7 @@ function solve() {
     })
     .then(res => {
       // console.log(res.data);
-      res.data.result.plan.forEach(function(value) {
+      res.data.result.plan.forEach(value => {
         console.log(value.action);
       });
     })
@@ -78,7 +85,7 @@ function convertToPDDL(problem, goal) {
   //   (movement motionO)
   //   (meeting calendarO))\n`;
 
-  var initialState = `(:init\n`;
+  let initialState = `(:init\n`;
   initialState = `${initialState} ${state.lamp ? ' (on lampO)\n' : ''}`;
   initialState = `${initialState} ${state.fan ? ' (on fanO)\n' : ''}`;
   initialState = `${initialState} ${state.lcd ? ' (occupied lcdO)\n' : ''}`;
@@ -110,14 +117,141 @@ function convertToPDDL(problem, goal) {
   solve();
 }
 
+const preprocessing = async ({ serverState, calendar, channel }) => {
+  const temperature = await getLastTemperatureRecord();
+  state.temperature = _.get(temperature, 'value', 25);
+
+  const humidity = await getLastHumidityRecord();
+  state.humidity = _.get(humidity, 'value', 40);
+
+  const motion = await getLastMotionRecord();
+  state.motion = _.get(motion, 'value', 0);
+
+  state.lamp = serverState.isLampOn;
+  state.fan = serverState.isFanOn;
+
+  const minTime = subtract('minutes')(1)(now());
+  const maxTime = add('minutes')(1)(now());
+
+  const events = await getEvents({
+    calendar,
+    query: {
+      calendarId: 'green.chamber.iot@gmail.com',
+      timeMin: toISOString(minTime),
+      timeMax: toISOString(maxTime),
+      singleEvents: true,
+      orderBy: 'startTime',
+      maxResults: 10,
+    },
+  });
+
+  state.meeting = events.length > 0;
+  state.lcd = events.length > 0;
+
+  if (events.length > 0) {
+    const [firstEvent] = events;
+
+    const text = `Current meeting: ${firstEvent.summary}`;
+    state.lcdDisplayText = text;
+
+    await amqp.publish({
+      channel,
+      exchangeName: 'actuators-exchange',
+      routingKey: 'actuators.lcd',
+      messageJSON: { value: text },
+    });
+  } else {
+    const text = 'No ongoing event';
+    state.lcdDisplayText = text;
+
+    await amqp.publish({
+      channel,
+      exchangeName: 'actuators-exchange',
+      routingKey: 'actuators.lcd',
+      messageJSON: { value: text },
+    });
+  }
+};
+
+const postprocessing = async ({
+  serverState,
+  channel,
+  actions,
+  // io
+}) => {
+  actions.forEach(async action => {
+    switch (action) {
+      case 'switch-on-lamp':
+        serverState.isLampOn = true;
+        state.lamp = true;
+        await amqp.publish({
+          channel,
+          exchangeName: 'actuators-exchange',
+          routingKey: 'actuators.plugwise.lamp',
+          messageJSON: { value: true },
+        });
+        // io.sockets.emit('lamp-state-changed', true );
+        break;
+
+      case 'switch-off-lamp':
+        serverState.isLampOn = false;
+        state.lamp = false;
+        await amqp.publish({
+          channel,
+          exchangeName: 'actuators-exchange',
+          routingKey: 'actuators.plugwise.lamp',
+          messageJSON: { value: false },
+        });
+        // io.sockets.emit('lamp-state-changed', false );
+        break;
+
+      case 'switch-on-fan':
+        serverState.isFanOn = true;
+        state.fan = true;
+        await amqp.publish({
+          channel,
+          exchangeName: 'actuators-exchange',
+          routingKey: 'actuators.plugwise.fan',
+          messageJSON: { value: true },
+        });
+        // io.sockets.emit('fan-state-changed', true );
+        break;
+
+      case 'switch-off-fan':
+        serverState.isFanOn = false;
+        state.fan = false;
+        await amqp.publish({
+          channel,
+          exchangeName: 'actuators-exchange',
+          routingKey: 'actuators.plugwise.fan',
+          messageJSON: { value: false },
+        });
+        // io.sockets.emit('fan-state-changed', false );
+        break;
+
+      // case 'show-occupied':
+      //   break;
+
+      // case 'show-free':
+      //   break;
+
+      default:
+    }
+  });
+};
+
 /**
  * Process received message
  * 1. send record through socket to the connected client
  * 2. insert record into the database
+ * 3. execute actions given by the planner
  */
-export const handleMessageReceived = ({
+export const handleMessageReceived = async ({
   routingKey,
   message,
+  serverState,
+  calendar,
+  channel,
   // io
 }) => {
   const route = routingKey.split('.');
@@ -125,34 +259,37 @@ export const handleMessageReceived = ({
   if (route[0] === 'sensors') {
     const type = route[1];
 
+    await preprocessing({ serverState, calendar, channel });
+
     if (type === 'temperature') {
-      console.log('Temperature: ' + message.value);
+      // console.log(`Temperature: ${message.value}`);
       state.temperature = message.value;
       goal = goalComfort;
-      //solve();
 
       // io.sockets.emit('temperature-changed', message);
-      // return insertTemperatureRecord(message);
+      await insertTemperatureRecord(message);
     }
 
     if (type === 'humidity') {
-      console.log('Humidity: ' + message.value);
+      // console.log(`Humidity: ${message.value}`);
       state.humidity = message.value;
       goal = goalComfort;
 
       // io.sockets.emit('humidity-changed', message);
-      // return insertHumidityRecord(message);
+      await insertHumidityRecord(message);
     }
 
     if (type === 'motion') {
-      console.log('Motion: ' + message.value);
+      // console.log(`Motion: ${message.value}`);
       state.motion = message.value;
       goal = goalEfficiency;
 
-      // return insertMotionRecord(message);
+      await insertMotionRecord(message);
     }
 
-    convertToPDDL(problem, goal);
+    const actions = convertToPDDL(problem, goal);
+
+    await postprocessing({ serverState, channel, actions });
   }
 
   return null;

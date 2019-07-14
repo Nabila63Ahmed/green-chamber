@@ -182,16 +182,13 @@ import {
         return;
       }
 
-      // TODO: Implement conditional logic
-
-      //    @TODO: Lamp or fan (on/off) -when needed (Nabila)
-      //    --> io.sockets.emit('lamp-state-changed', true/false )
-      //    OR
-      //    --> io.sockets.emit('fan-state-changed', true/false)
-
+      /* Implementation conditional logic */
       await logic.handleMessageReceived({
         routingKey: message.fields.routingKey,
         message: messageJSON,
+        serverState: state,
+        calendar,
+        channel,
         // io,
       });
 
