@@ -19,8 +19,8 @@ const state = {
   lamp: false,
   fan: false,
   motion: 0,
-  temperature: 20,
-  humidity: 45,
+  temperature: 24,
+  humidity: 40,
   meeting: false,
 };
 
@@ -90,7 +90,7 @@ const solve = async (domain, problem) => {
 
 const preprocessing = async ({ serverState, calendar, channel }) => {
   const temperature = await getLastTemperatureRecord();
-  state.temperature = _.get(temperature, 'value', 25);
+  state.temperature = _.get(temperature, 'value', 24);
 
   const humidity = await getLastHumidityRecord();
   state.humidity = _.get(humidity, 'value', 40);
@@ -251,21 +251,18 @@ export const handleMessageReceived = async ({
 
     if (type === 'temperature') {
       state.temperature = message.value;
-
       // io.sockets.emit('temperature-changed', message);
       await insertTemperatureRecord(message);
     }
 
     if (type === 'humidity') {
       state.humidity = message.value;
-
       // io.sockets.emit('humidity-changed', message);
       await insertHumidityRecord(message);
     }
 
     if (type === 'motion') {
       state.motion = message.value;
-
       await insertMotionRecord(message);
     }
 

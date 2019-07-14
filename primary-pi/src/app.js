@@ -66,36 +66,17 @@ import {
   // const routingKey6 = 'actuators.lcd';
 
   /* AMQP connection, channel creation */
-  const connection = await amqp.createConnection({
-    connectionUri,
-  });
-  const channel = await amqp.createChannel({
-    connection,
-  });
+  const connection = await amqp.createConnection({ connectionUri });
+  const channel = await amqp.createChannel({ connection });
 
   /* AMQP Exchanges creation */
-  await amqp.assertExchange({
-    channel,
-    exchangeName: exchangeName1,
-  });
-  await amqp.assertExchange({
-    channel,
-    exchangeName: exchangeName2,
-  });
+  await amqp.assertExchange({ channel, exchangeName: exchangeName1 });
+  await amqp.assertExchange({ channel, exchangeName: exchangeName2 });
 
   /* AMQP Queues creation */
-  await amqp.assertQueue({
-    channel,
-    queueName: queueName1,
-  });
-  await amqp.assertQueue({
-    channel,
-    queueName: queueName2,
-  });
-  await amqp.assertQueue({
-    channel,
-    queueName: queueName3,
-  });
+  await amqp.assertQueue({ channel, queueName: queueName1 });
+  await amqp.assertQueue({ channel, queueName: queueName2 });
+  await amqp.assertQueue({ channel, queueName: queueName3 });
   // await amqp.assertQueue({ channel, queueName: queueName4 });
   // await amqp.assertQueue({ channel, queueName: queueName5 });
   // await amqp.assertQueue({ channel, queueName: queueName6 });
@@ -145,15 +126,15 @@ import {
 
   /* ***************************************************************************** */
 
-  await amqp.publish({
-    channel,
-    exchangeName: exchangeName1,
-    routingKey: routingKey1,
-    messageJSON: {
-      value: Math.random() * 25 + 15,
-      createdAt: Date.now(),
-    },
-  });
+  // await amqp.publish({
+  //   channel,
+  //   exchangeName: exchangeName1,
+  //   routingKey: routingKey1,
+  //   messageJSON: {
+  //     value: Math.random() * 25 + 15,
+  //     createdAt: Date.now(),
+  //   },
+  // });
 
   // await amqp.publish({
   //   channel,
