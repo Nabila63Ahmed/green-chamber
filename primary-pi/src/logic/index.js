@@ -34,7 +34,7 @@ fs.readFile('./src/logic/data/domain.pddl', 'utf8', (err, domainContent) => {
 });
 
 // Problem changes and it is defined as string
-var problem = `(define (problem problem-green-chamber)
+let problem = `(define (problem problem-green-chamber)
   (:domain green-chamber)
   (:objects
     calendar_o - calendar
@@ -49,44 +49,7 @@ const goal = `(:goal
          (efficiency)
     )))`;
 
-// function convertToPDDL(problem, goal) {
-//   // var initialState = `(:init
-//   //   (on fanO)
-//   //   (movement motionO)
-//   //   (meeting calendarO))\n`;
-//
-//   let initialState = `(:init\n`;
-//   initialState = `${initialState} ${state.lamp ? ' (on lampO)\n' : ''}`;
-//   initialState = `${initialState} ${state.fan ? ' (on fanO)\n' : ''}`;
-//   initialState = `${initialState} ${
-//     state.motion == 1 ? ' (movement motionO)\n' : ''
-//   }`;
-//   initialState = `${initialState} (= (current_temperature) ${state.temperature})\n`;
-//   initialState = `${initialState} (= (current_humidity) ${state.humidity})\n`;
-//   initialState = `${initialState} ${
-//     state.meeting ? ' (meeting calendarO)\n' : ''
-//   }`;
-//   initialState = `${initialState})\n`;
-//
-//   // goal = `${goal} ${
-//   //   state.hot || state.damp ? ' (on fanO)' : ' (not (on fanO))'
-//   // }\n`;
-//   // goal = `${goal} ${
-//   //   state.movement && state.meeting ? ' (on lampO)' : ' (not (on lampO))'
-//   // }\n`;
-//   // goal = `${goal} ${
-//   //   state.meeting ? ' (occupied lcdO)' : ' (not (occupied lcdO))'
-//   // }`;
-//   // goal = `${goal}))`;
-//
-//   problem = `${problem} ${initialState} ${goal}`;
-//   console.log(problem);
-//   console.log(domain);
-//
-//   solve();
-// }
-
-function solve(domain, problem, serverState, channel) {
+const solve = async ({ domain, problem, serverState, channel }) => {
   let initialState = `(:init\n`;
   initialState = `${initialState} ${state.lamp ? ' (on lamp_o)\n' : ''}`;
   initialState = `${initialState} ${state.fan ? ' (on fan_o)\n' : ''}`;
@@ -104,30 +67,26 @@ function solve(domain, problem, serverState, channel) {
   console.log(domain);
   console.log(problem);
 
-  var actions = [];
+  let actions = [];
 
-  axios
-    .post('http://solver.planning.domains/solve-and-validate', {
-      domain,
-      problem,
-    })
-    .then(res => {
-      // console.log(res.data);
-      res.data.result.plan.forEach(value => {
-        actions.push(value.name);
-        //console.log(value.name);
-      });
-
-      postprocessing({
-        serverState,
-        channel,
-        actions,
-      });
-    })
-    .catch(error => {
-      console.error(error.data);
+  try {
+    const response = await axios.post(
+      'http://solver.planning.domains/solve-and-validate',
+      {
+        domain,
+        problem,
+      },
+    );
+    // console.log(response.data);
+    response.data.result.plan.forEach(value => {
+      actions.push(value.name);
+      // console.log(value.name);
     });
-}
+  } catch (error) {
+    console.log(error.data);
+  }
+  return actions;
+};
 
 const preprocessing = async ({ serverState, calendar, channel }) => {
   const temperature = await getLastTemperatureRecord();
@@ -158,7 +117,6 @@ const preprocessing = async ({ serverState, calendar, channel }) => {
   });
 
   state.meeting = events.length > 0;
-  // state.lcd = events.length > 0;
 
   if (events.length > 0) {
     const [firstEvent] = events;
@@ -195,87 +153,75 @@ const postprocessing = async ({
   actions,
   // io
 }) => {
-  actions.forEach(async action => {
-    switch (action) {
-      case '(switch-on-lamp lamp_o motion_o calendar_o)':
-        console.log(action);
-        serverState.isLampOn = true;
-        state.lamp = true;
-        await amqp.publish({
-          channel,
-          exchangeName: 'actuators-exchange',
-          routingKey: 'actuators.plugwise.lamp',
-          messageJSON: {
-            value: true,
-          },
-        });
-        // io.sockets.emit('lamp-state-changed', true );
-        break;
+  if (actions.length > 0) {
+    actions.forEach(async action => {
+      const actionName = action.substring(1, action.length).split(' ')[0];
+      switch (actionName) {
+        case 'switch-on-lamp':
+          console.log(actionName);
+          serverState.isLampOn = true;
+          state.lamp = true;
+          await amqp.publish({
+            channel,
+            exchangeName: 'actuators-exchange',
+            routingKey: 'actuators.plugwise.lamp',
+            messageJSON: {
+              value: true,
+            },
+          });
+          // io.sockets.emit('lamp-state-changed', true );
+          break;
 
-      case '(switch-off-lamp lamp_o motion_o calendar_o)':
-        console.log(action);
-        serverState.isLampOn = false;
-        state.lamp = false;
-        await amqp.publish({
-          channel,
-          exchangeName: 'actuators-exchange',
-          routingKey: 'actuators.plugwise.lamp',
-          messageJSON: {
-            value: false,
-          },
-        });
-        // io.sockets.emit('lamp-state-changed', false );
-        break;
+        case 'switch-off-lamp':
+          console.log(actionName);
+          serverState.isLampOn = false;
+          state.lamp = false;
+          await amqp.publish({
+            channel,
+            exchangeName: 'actuators-exchange',
+            routingKey: 'actuators.plugwise.lamp',
+            messageJSON: {
+              value: false,
+            },
+          });
+          // io.sockets.emit('lamp-state-changed', false );
+          break;
 
-      case '(switch-on-fan fan_o calendar_o motion_o)':
-        console.log(action);
-        serverState.isFanOn = true;
-        state.fan = true;
-        await amqp.publish({
-          channel,
-          exchangeName: 'actuators-exchange',
-          routingKey: 'actuators.plugwise.fan',
-          messageJSON: {
-            value: true,
-          },
-        });
-        // io.sockets.emit('fan-state-changed', true );
-        break;
+        case 'switch-on-fan':
+          console.log(actionName);
+          serverState.isFanOn = true;
+          state.fan = true;
+          await amqp.publish({
+            channel,
+            exchangeName: 'actuators-exchange',
+            routingKey: 'actuators.plugwise.fan',
+            messageJSON: {
+              value: true,
+            },
+          });
+          // io.sockets.emit('fan-state-changed', true );
+          break;
 
-      case '(switch-off-fan fan_o calendar_o motion_o)':
-        console.log(action);
-        serverState.isFanOn = false;
-        state.fan = false;
-        await amqp.publish({
-          channel,
-          exchangeName: 'actuators-exchange',
-          routingKey: 'actuators.plugwise.fan',
-          messageJSON: {
-            value: false,
-          },
-        });
-        // io.sockets.emit('fan-state-changed', false );
-        break;
+        case 'switch-off-fan':
+          console.log(actionName);
+          serverState.isFanOn = false;
+          state.fan = false;
+          await amqp.publish({
+            channel,
+            exchangeName: 'actuators-exchange',
+            routingKey: 'actuators.plugwise.fan',
+            messageJSON: {
+              value: false,
+            },
+          });
+          // io.sockets.emit('fan-state-changed', false );
+          break;
 
-      case '(do-nothing-comfort fan_o motion_o calendar_o)':
-        console.log(action);
-        // io.sockets.emit('fan-state-changed', false );
-        break;
-
-      case '(do-nothing-efficiency lamp_o motion_o calendar_o)':
-        console.log(action);
-        // io.sockets.emit('fan-state-changed', false );
-        break;
-
-      // case 'show-occupied':
-      //   break;
-
-      // case 'show-free':
-      //   break;
-
-      default:
-    }
-  });
+        default:
+          console.log(actionName);
+      }
+    });
+  }
 };
 
 /**
@@ -304,7 +250,6 @@ export const handleMessageReceived = async ({
     });
 
     if (type === 'temperature') {
-      // console.log(`Temperature: ${message.value}`);
       state.temperature = message.value;
 
       // io.sockets.emit('temperature-changed', message);
@@ -312,7 +257,6 @@ export const handleMessageReceived = async ({
     }
 
     if (type === 'humidity') {
-      // console.log(`Humidity: ${message.value}`);
       state.humidity = message.value;
 
       // io.sockets.emit('humidity-changed', message);
@@ -320,7 +264,6 @@ export const handleMessageReceived = async ({
     }
 
     if (type === 'motion') {
-      // console.log(`Motion: ${message.value}`);
       state.motion = message.value;
 
       await insertMotionRecord(message);
@@ -328,13 +271,14 @@ export const handleMessageReceived = async ({
 
     solve(domain, problem, serverState, channel);
 
-    // const actions = solve();
-    //
-    // await postprocessing({
-    //   serverState,
-    //   channel,
-    //   actions
-    // });
+    const actions = await solve();
+
+    await postprocessing({
+      serverState,
+      channel,
+      actions,
+      //io,
+    });
   }
 
   return null;
