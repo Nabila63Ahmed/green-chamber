@@ -1,6 +1,6 @@
 /* eslint-disable quotes */
 import axios from 'axios';
-import fs, { stat } from 'fs';
+import fs from 'fs';
 import _ from 'lodash';
 import {
   getLastTemperatureRecord,
@@ -275,7 +275,7 @@ export const handleMessageReceived = async ({
       serverState,
       channel,
       actions,
-      //io,
+      // io,
     });
   }
 
