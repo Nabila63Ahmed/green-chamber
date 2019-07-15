@@ -24,9 +24,9 @@ const state = {
   meeting: false,
 };
 
-// Domain is static and it is loaded from the file
 let domain = '';
 
+/* Domain model is loaded */
 fs.readFile('./src/logic/data/domain.pddl', 'utf8', (err, domainContent) => {
   if (err) throw err;
 
@@ -49,6 +49,7 @@ const goal = `(:goal
          (efficiency)
     )))`;
 
+/* Builds the PDDL problem and solves it with an external planner */
 const solve = async (domain, problem) => {
   let initialState = `(:init\n`;
   initialState = `${initialState} ${state.lamp ? ' (on lamp_o)\n' : ''}`;
@@ -88,6 +89,7 @@ const solve = async (domain, problem) => {
   return actions;
 };
 
+/* Update the current state with database recent values */
 const preprocessing = async ({ serverState, calendar, channel, io }) => {
   const temperature = await getLastTemperatureRecord();
   state.temperature = _.get(temperature, 'value', 24);
@@ -149,6 +151,7 @@ const preprocessing = async ({ serverState, calendar, channel, io }) => {
   }
 };
 
+/* Handle received solution from the planner */
 const postprocessing = async ({ serverState, channel, actions, io }) => {
   if (actions.length > 0) {
     actions.forEach(async action => {
