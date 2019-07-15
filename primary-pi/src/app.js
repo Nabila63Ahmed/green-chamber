@@ -40,12 +40,12 @@ import {
   // console.log('EVENTS >', events);
 
   /* Initialize socket */
-  // const io = socket();
-  // const socketsPort = 4001;
-  //
-  // io.listen(socketsPort);
-  // // eslint-disable-next-line no-console
-  // console.log(`Sockets server listening on port ${socketsPort}...`);
+  const io = socket();
+  const socketsPort = 4001;
+
+  io.listen(socketsPort);
+  // eslint-disable-next-line no-console
+  console.log(`Sockets server listening on port ${socketsPort}...`);
 
   const connectionUri = 'amqp://localhost';
   const exchangeName1 = 'sensors-exchange';
@@ -170,7 +170,7 @@ import {
         serverState: state,
         calendar,
         channel,
-        // io,
+        io,
       });
 
       console.log('MESSAGE >', messageJSON);
@@ -178,26 +178,26 @@ import {
     }
   };
 
-  // io.on('connection', () => {
-  /* Consume messages on the sensor's queues */
-  amqp.consume({
-    channel,
-    queueName: queueName1,
-    onMessageReceived: handleMessageReceived,
-  });
+  io.on('connection', () => {
+    /* Consume messages on the sensor's queues */
+    amqp.consume({
+      channel,
+      queueName: queueName1,
+      onMessageReceived: handleMessageReceived,
+    });
 
-  amqp.consume({
-    channel,
-    queueName: queueName2,
-    onMessageReceived: handleMessageReceived,
-  });
+    amqp.consume({
+      channel,
+      queueName: queueName2,
+      onMessageReceived: handleMessageReceived,
+    });
 
-  amqp.consume({
-    channel,
-    queueName: queueName3,
-    onMessageReceived: handleMessageReceived,
+    amqp.consume({
+      channel,
+      queueName: queueName3,
+      onMessageReceived: handleMessageReceived,
+    });
   });
-  // });
 
   // amqp.consume({
   //   channel,

@@ -147,12 +147,7 @@ const preprocessing = async ({ serverState, calendar, channel }) => {
   }
 };
 
-const postprocessing = async ({
-  serverState,
-  channel,
-  actions,
-  // io
-}) => {
+const postprocessing = async ({ serverState, channel, actions, io }) => {
   if (actions.length > 0) {
     actions.forEach(async action => {
       const actionName = action.substring(1, action.length).split(' ')[0];
@@ -169,7 +164,7 @@ const postprocessing = async ({
               value: true,
             },
           });
-          // io.sockets.emit('lamp-state-changed', true );
+          io.sockets.emit('lamp-state-changed', true);
           break;
 
         case 'switch-off-lamp':
@@ -184,7 +179,7 @@ const postprocessing = async ({
               value: false,
             },
           });
-          // io.sockets.emit('lamp-state-changed', false );
+          io.sockets.emit('lamp-state-changed', false);
           break;
 
         case 'switch-on-fan':
@@ -199,7 +194,7 @@ const postprocessing = async ({
               value: true,
             },
           });
-          // io.sockets.emit('fan-state-changed', true );
+          io.sockets.emit('fan-state-changed', true);
           break;
 
         case 'switch-off-fan':
@@ -214,7 +209,7 @@ const postprocessing = async ({
               value: false,
             },
           });
-          // io.sockets.emit('fan-state-changed', false );
+          io.sockets.emit('fan-state-changed', false);
           break;
 
         default:
@@ -236,7 +231,7 @@ export const handleMessageReceived = async ({
   serverState,
   calendar,
   channel,
-  // io
+  io,
 }) => {
   const route = routingKey.split('.');
 
@@ -251,13 +246,13 @@ export const handleMessageReceived = async ({
 
     if (type === 'temperature') {
       state.temperature = message.value;
-      // io.sockets.emit('temperature-changed', message);
+      io.sockets.emit('temperature-changed', message);
       await insertTemperatureRecord(message);
     }
 
     if (type === 'humidity') {
       state.humidity = message.value;
-      // io.sockets.emit('humidity-changed', message);
+      io.sockets.emit('humidity-changed', message);
       await insertHumidityRecord(message);
     }
 
@@ -272,7 +267,7 @@ export const handleMessageReceived = async ({
       serverState,
       channel,
       actions,
-      // io,
+      io,
     });
   }
 
