@@ -124,27 +124,6 @@ import {
   //   routingKey: routingKey6,
   // });
 
-  /* ***************************************************************************** */
-
-  // await amqp.publish({
-  //   channel,
-  //   exchangeName: exchangeName1,
-  //   routingKey: routingKey1,
-  //   messageJSON: {
-  //     value: Math.random() * 25 + 15,
-  //     createdAt: Date.now(),
-  //   },
-  // });
-
-  // await amqp.publish({
-  //   channel,
-  //   exchangeName: exchangeName1,
-  //   routingKey: routingKey2,
-  //   messageJSON: { value: Math.random() * 25 + 15, createdAt: Date.now() },
-  // });
-
-  /* ***************************************************************************** */
-
   /* Handle messages consumed by the server */
   const handleMessageReceived = async message => {
     if (message) {
