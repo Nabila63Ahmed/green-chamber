@@ -124,30 +124,34 @@ const preprocessing = async ({ serverState, calendar, channel, io }) => {
     const [firstEvent] = events;
 
     const text = `Current meeting: ${firstEvent.summary}`;
-    state.lcdDisplayText = text;
+    if (state.lcdDisplayText !== text) {
+      state.lcdDisplayText = text;
 
-    io.sockets.emit('event-state-changed', { summary: firstEvent.summary });
-    await amqp.publish({
-      channel,
-      exchangeName: 'actuators-exchange',
-      routingKey: 'actuators.lcd',
-      messageJSON: {
-        value: text,
-      },
-    });
+      io.sockets.emit('event-state-changed', { summary: firstEvent.summary });
+      await amqp.publish({
+        channel,
+        exchangeName: 'actuators-exchange',
+        routingKey: 'actuators.lcd',
+        messageJSON: {
+          value: text,
+        },
+      });
+    }
   } else {
     const text = 'No ongoing event';
-    state.lcdDisplayText = text;
-    io.sockets.emit('event-state-changed', null);
+    if (state.lcdDisplayText !== text) {
+      state.lcdDisplayText = text;
+      io.sockets.emit('event-state-changed', null);
 
-    await amqp.publish({
-      channel,
-      exchangeName: 'actuators-exchange',
-      routingKey: 'actuators.lcd',
-      messageJSON: {
-        value: text,
-      },
-    });
+      await amqp.publish({
+        channel,
+        exchangeName: 'actuators-exchange',
+        routingKey: 'actuators.lcd',
+        messageJSON: {
+          value: text,
+        },
+      });
+    }
   }
 };
 
