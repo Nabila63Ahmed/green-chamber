@@ -2,19 +2,20 @@
   (:domain green-chamber)
 
   (:objects
-     cal - calendar
-     temp - temperature
-     hum - humidity
-     mot - motion
-     s - lcd
-     l - lamp
-     f - fan
-  )
+   calendar_o - calendar
+   temperature_o - temperature
+   humidity_o - humidity
+   motion_o - motion
+   lamp_o - lamp
+   fan_o - fan)
 
-  (:init (on f)
-         (movement mot)
-         (meeting cal)
-  )
+  (:init
+   (= (current_temperature) 30)
+   (= (current_humidity) 35)
+   (meeting calendar_o)
+   (movement motion_o))
 
-  (:goal (and (on l) (occupied s) (not (on f))))
-)
+  (:goal
+    (and (comfort)
+         (efficiency)
+    )))
