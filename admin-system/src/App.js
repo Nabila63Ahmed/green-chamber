@@ -72,18 +72,18 @@ class App extends React.Component {
 
     /* Reflect real-time lamp state in local state */
     io.on('lamp-state-changed', newLampState => {
-      this.setState(state => ({ isLampOn: newLampState }));
+      this.setState({ isLampOn: newLampState });
     });
 
     /* Reflect real-time fan state in local state */
     io.on('fan-state-changed', newFanState => {
-      this.setState(state => ({ isFanOn: newFanState }));
+      this.setState({ isFanOn: newFanState });
     });
 
     /* Reflect real-time event state in local state */
     io.on('event-state-changed', newEventState => {
       const summary = _.get(newEventState, 'summary', null);
-      this.setState(state => ({ currentEvent: { summary } }));
+      this.setState({ currentEvent: { summary } });
     });
 
     /* Update local state */
