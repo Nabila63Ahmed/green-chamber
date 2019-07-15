@@ -34,4 +34,4 @@ while True:
     message_hum_json = json.dumps(message_hum)
     channel.basic_publish(exchange=exchange_name, routing_key=routing_key_humidity, body=message_hum_json)
 
-    time.sleep(5)
+    time.sleep(30)
