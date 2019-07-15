@@ -13,6 +13,10 @@ An implementation of smart additions to a meeting room in a working space, in or
 * `/primary-pi ❯  sudo docker-compose up`
 * `/primary-pi ❯  npm start`
 
+### Raspberry Pi
+
+* `❯  sh start.sh`
+
 ### Admin system
 
 * `/admin-system ❯  npm start`
