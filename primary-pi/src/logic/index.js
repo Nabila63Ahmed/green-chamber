@@ -88,7 +88,7 @@ const solve = async (domain, problem) => {
   return actions;
 };
 
-const preprocessing = async ({ serverState, calendar, channel }) => {
+const preprocessing = async ({ serverState, calendar, channel, io }) => {
   const temperature = await getLastTemperatureRecord();
   state.temperature = _.get(temperature, 'value', 24);
 
@@ -124,6 +124,7 @@ const preprocessing = async ({ serverState, calendar, channel }) => {
     const text = `Current meeting: ${firstEvent.summary}`;
     state.lcdDisplayText = text;
 
+    io.sockets.emit('event-state-changed', { summary: firstEvent.summary });
     await amqp.publish({
       channel,
       exchangeName: 'actuators-exchange',
@@ -135,6 +136,7 @@ const preprocessing = async ({ serverState, calendar, channel }) => {
   } else {
     const text = 'No ongoing event';
     state.lcdDisplayText = text;
+    io.sockets.emit('event-state-changed', null);
 
     await amqp.publish({
       channel,
@@ -221,9 +223,11 @@ const postprocessing = async ({ serverState, channel, actions, io }) => {
 
 /**
  * Process received message
- * 1. send record through socket to the connected client
- * 2. insert record into the database
- * 3. execute actions given by the planner
+ * 1. Preprocess State sent to the planner
+ * 2. send record through socket to the connected client
+ * 3. insert record into the database
+ * 4. PDDL Planning
+ * 5. execute actions given by the planner
  */
 export const handleMessageReceived = async ({
   routingKey,
@@ -242,6 +246,7 @@ export const handleMessageReceived = async ({
       serverState,
       calendar,
       channel,
+      io,
     });
 
     if (type === 'temperature') {
