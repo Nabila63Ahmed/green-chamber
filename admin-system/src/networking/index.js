@@ -50,9 +50,7 @@ export const getCurrentEvent = async () => {
 
 /* Fetch the current lamp state from the server */
 export const getLamp = async () => {
-  const response = await axios.get('http://localhost:4000/api/lamp', {
-    validateStatus: () => true,
-  });
+  const response = await axios.get('http://localhost:4000/api/lamp');
 
   return response.data.data.isLampOn;
 };

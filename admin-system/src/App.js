@@ -95,7 +95,6 @@ class App extends React.Component {
   /* Toggle the current lamp state in the system */
   _handleToggleLamp = async () => {
     const { isLampOn } = this.state;
-
     const newValue = await toggleLamp(!isLampOn);
     this.setState({ isLampOn: newValue });
   };
@@ -145,21 +144,37 @@ class App extends React.Component {
             </Heading>
 
             <Box style={styles.centered} direction="row">
-              <Button
-                style={{ margin: 16, padding: 30 }}
-                plain={false}
-                icon={<Icons.Info size="large" color="white" />}
-                color={isLampOn ? 'status-ok' : 'status-critical'}
+              <button
+                style={{
+                  margin: 16,
+                  padding: 30,
+                  borderRadius: 15,
+                  borderWidth: 4,
+                  borderColor: isLampOn ? '#00C781' : '#FF4040',
+                  backgroundColor: 'black',
+                  outline: 'none',
+                  cursor: 'pointer',
+                }}
                 onClick={this._handleToggleLamp}
-              />
+              >
+                <Icons.Info size="large" color="white" />
+              </button>
 
-              <Button
-                style={{ margin: 16, padding: 30 }}
-                plain={false}
-                icon={<Icons.Fan size="large" color="white" />}
-                color={isFanOn ? 'status-ok' : 'status-critical'}
+              <button
+                style={{
+                  margin: 16,
+                  padding: 30,
+                  borderRadius: 15,
+                  borderWidth: 4,
+                  borderColor: isFanOn ? '#00C781' : '#FF4040',
+                  backgroundColor: 'black',
+                  outline: 'none',
+                  cursor: 'pointer',
+                }}
                 onClick={this._handleToggleFan}
-              />
+              >
+                <Icons.Fan size="large" color="white" />
+              </button>
             </Box>
 
             <Heading color="white" margin="medium">
