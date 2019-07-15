@@ -5,10 +5,12 @@ import json
 import time
 from config import *
 
+# Build a connection to the broker using the data from the configuration file
 credentials = pika.PlainCredentials(username, password)
 connection = pika.BlockingConnection(pika.ConnectionParameters(ip, port, host, credentials))
 channel = connection.channel()
 
+# Specify the exchange and routing key for motion
 exchange_name = 'sensors-exchange'
 routing_key_name = 'sensors.motion'
 
@@ -18,6 +20,11 @@ last_motion_message = 0
 motion = 0
 grovepi.pinMode(pir_sensor,"INPUT")
 
+# In an infinity loop motion data is gathered from the motion sensor every second.
+# If a motion is registered and the last published value was not 1, value 1 is published immediately to the broker.
+# In case the last published value was 1, a timer of 30 seconds is started.
+# Every motion in the meantime starts the timer again.
+# If there was no motion for 30 seconds, value 0 is published.
 while True:
     try:
         motion=grovepi.digitalRead(pir_sensor)
@@ -35,7 +42,6 @@ while True:
                     print(" [x] Sent %r:%r" % (routing_key_name, message_json))
                     last_motion_message = 1
                     timer = 30
-                    motion_in_between = False
                 else:
                     timer = 30
             else:

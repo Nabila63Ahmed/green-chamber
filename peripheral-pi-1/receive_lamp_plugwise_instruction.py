@@ -4,16 +4,19 @@ import json
 from config import *
 
 DEFAULT_PORT = "/dev/ttyUSB0"
-mac = "000D6F000567156D"
+mac = "000D6F000567156D" # MAC address of circle+ plugwise which contains the lamp
 
+# Initiate the circle and turn it off at start
 stick = Stick(DEFAULT_PORT)
 circle = Circle(mac, stick)
 circle.switch_off()
 
+# Build a connection to the broker using the data from the configuration file
 credentials = pika.PlainCredentials(username, password)
 connection = pika.BlockingConnection(pika.ConnectionParameters(ip, port, host, credentials))
 channel = connection.channel()
 
+# Specify the exchange, routing key and queue for the lamp plugwise
 exchange_name = 'actuators-exchange'
 routing_key_name = 'actuators.plugwise.lamp'
 queue_name = 'actuators.plugwise.lamp.queue'
@@ -22,6 +25,7 @@ channel.queue_declare(queue_name, durable=True, exclusive=True)
 channel.queue_bind(exchange=exchange_name, queue=queue_name, routing_key=routing_key_name)
 print(' [*] Waiting for logs. To exit press CTRL+C')
 
+# Turn the plugwise on or off, with the respect to the received instruction
 def callback(ch, method, properties, body):
     message = body.decode()
     message_JSON = json.loads(message)
