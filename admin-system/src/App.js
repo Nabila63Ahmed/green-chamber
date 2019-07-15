@@ -1,5 +1,6 @@
 import React from 'react';
-import { Grommet, Grid, Box, Heading, Button } from 'grommet';
+import _ from 'lodash';
+import { Grommet, Grid, Box, Heading } from 'grommet';
 import * as Icons from 'grommet-icons';
 import { LineChart, XAxis, YAxis, Line, Label, Tooltip } from 'recharts';
 import socket from 'socket.io-client';
@@ -79,6 +80,12 @@ class App extends React.Component {
       this.setState(state => ({ isFanOn: newFanState }));
     });
 
+    /* Reflect real-time event state in local state */
+    io.on('event-state-changed', newEventState => {
+      const summary = _.get(newEventState, 'summary', null);
+      this.setState(state => ({ currentEvent: { summary } }));
+    });
+
     /* Update local state */
     this.setState({
       isLoading: false,
@@ -95,6 +102,7 @@ class App extends React.Component {
   /* Toggle the current lamp state in the system */
   _handleToggleLamp = async () => {
     const { isLampOn } = this.state;
+
     const newValue = await toggleLamp(!isLampOn);
     this.setState({ isLampOn: newValue });
   };
@@ -273,7 +281,7 @@ class App extends React.Component {
                 animation="fadeIn"
               >
                 <Heading size="small" textAlign="center">
-                  {currentEvent ? (
+                  {currentEvent && currentEvent.summary ? (
                     truncate(70)(currentEvent.summary)
                   ) : (
                     <Icons.Close size="large" color="red" />
