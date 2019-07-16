@@ -15,7 +15,7 @@ An implementation of smart additions to a meeting room in a working space, in or
 
 ### Raspberry Pi
 
-* `❯  sh start.sh`
+* `❯  python3 green-chamber.py`
 
 ### Admin system
 
