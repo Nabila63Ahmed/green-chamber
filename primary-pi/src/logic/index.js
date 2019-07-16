@@ -122,12 +122,12 @@ const preprocessing = async ({ serverState, calendar, channel, io }) => {
 
   if (events.length > 0) {
     const [firstEvent] = events;
+    io.sockets.emit('event-state-changed', { summary: firstEvent.summary });
 
     const text = `Current meeting: ${firstEvent.summary}`;
     if (state.lcdDisplayText !== text) {
       state.lcdDisplayText = text;
 
-      io.sockets.emit('event-state-changed', { summary: firstEvent.summary });
       await amqp.publish({
         channel,
         exchangeName: 'actuators-exchange',
@@ -139,9 +139,10 @@ const preprocessing = async ({ serverState, calendar, channel, io }) => {
     }
   } else {
     const text = 'No ongoing event';
+    io.sockets.emit('event-state-changed', null);
+
     if (state.lcdDisplayText !== text) {
       state.lcdDisplayText = text;
-      io.sockets.emit('event-state-changed', null);
 
       await amqp.publish({
         channel,
